@@ -35,6 +35,7 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
   const [voterName, setVoterName] = useState("");
   const [customAnswer, setCustomAnswer] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [voteSuccess, setVoteSuccess] = useState(false);
   const [viewingResults, setViewingResults] = useState(false);
@@ -116,7 +117,31 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
             </AnimatePresence>
           </div>
           <div className="lg:col-span-4 p-8 sm:p-12 bg-foreground/[0.02]">
-            <PollSidebar id={displayPoll.id} totalVotes={displayPoll.totalVotes} topOption={topOption.voteCount > 0 ? topOption : undefined} createdAtFormatted={createdAtFormatted} creatorName={initialPoll.creator?.name || "Guest"} hideShareButton={displayPoll.hideShareButton} copied={copied} onCopyLink={() => { navigator.clipboard.writeText(window.location.href); setCopied(true); setTimeout(() => setCopied(false), 2000); }} isOwner={isOwner} onOpenSettings={() => setIsSettingsOpen(true)} onDelete={async () => { if (window.confirm("Delete poll?")) { await deletePoll(initialPoll.id); router.push("/dashboard"); } }} />
+            <PollSidebar 
+              id={displayPoll.id} 
+              totalVotes={displayPoll.totalVotes} 
+              topOption={topOption.voteCount > 0 ? topOption : undefined} 
+              createdAtFormatted={createdAtFormatted} 
+              creatorName={initialPoll.creator?.name || "Guest"} 
+              hideShareButton={displayPoll.hideShareButton} 
+              copied={copied} 
+              onCopyLink={() => { navigator.clipboard.writeText(window.location.href); setCopied(true); setTimeout(() => setCopied(false), 2000); }} 
+              isOwner={isOwner} 
+              onOpenSettings={() => setIsSettingsOpen(true)} 
+              isDeleting={isDeleting}
+              onDelete={async () => { 
+                if (window.confirm("Delete poll?")) { 
+                  setIsDeleting(true);
+                  try {
+                    await deletePoll(initialPoll.id); 
+                    router.push("/dashboard"); 
+                  } catch (e) {
+                    setIsDeleting(false);
+                    alert("Failed to delete poll");
+                  }
+                } 
+              }} 
+            />
           </div>
         </div>
       </Card>

@@ -126,6 +126,7 @@ export function PollSettingsModal({
             <div className="p-6 bg-foreground/5 flex justify-end">
               <Button
                 onClick={onClose}
+                isLoading={isUpdating}
                 className="bg-foreground text-background font-bold px-8 rounded-xl h-12 hover:opacity-90 transition-all shadow-xl"
               >
                 Save & Close

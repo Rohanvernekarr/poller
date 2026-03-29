@@ -29,7 +29,7 @@ export default function CreatePoll() {
   };
 
   return (
-    <div className="min-h-screen pt-0 pb-20 px-6 max-w-2xl mx-auto">
+    <div className="min-h-screen pt-10 pb-20 px-6 max-w-2xl mx-auto">
       <TechnicalBackButton 
         href={session ? "/dashboard" : "/"} 
         text={session ? "Back to Dashboard" : "Back to Home"} 
@@ -60,7 +60,7 @@ export default function CreatePoll() {
           {/* Subtle gradient accent */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-border" />
           
-          <CardHeader className="space-y-6 pt-12 text-center pb-12">
+          <CardHeader className="space-y-6 pt-10 text-center pb-2">
             <CardTitle className="text-5xl font-black uppercase tracking-tight italic leading-none">Create New Poll</CardTitle>
             <CardDescription className="text-foreground/40 font-black uppercase tracking-widest text-[10px] max-w-sm mx-auto">Complete the details below to generate your shareable link.</CardDescription>
           </CardHeader>
@@ -204,7 +204,9 @@ export default function CreatePoll() {
                 className="w-full mt-8 h-16 bg-foreground text-background hover:opacity-90 rounded-2xl font-black uppercase tracking-widest text-lg shadow-2xl shadow-foreground/20"
                 isLoading={isSubmitting}
               >
-                Create your Poll <ArrowRight className="w-5 h-5 ml-4" />
+                {isSubmitting ? "Creating your Poll..." : (
+                  <>Create your Poll <ArrowRight className="w-5 h-5 ml-4" /></>
+                )}
               </Button>
             </form>
           </CardContent>

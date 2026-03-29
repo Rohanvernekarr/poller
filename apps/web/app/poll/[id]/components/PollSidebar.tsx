@@ -29,6 +29,7 @@ interface PollSidebarProps {
   onCopyLink: () => void;
   isOwner: boolean;
   onOpenSettings: () => void;
+  isDeleting: boolean;
   onDelete: () => void;
 }
 
@@ -43,6 +44,7 @@ export function PollSidebar({
   onCopyLink,
   isOwner,
   onOpenSettings,
+  isDeleting,
   onDelete,
 }: PollSidebarProps) {
   return (
@@ -170,6 +172,7 @@ export function PollSidebar({
             onClick={onDelete}
             variant="ghost"
             className="w-full h-12 text-sm font-semibold text-red-500/60 hover:text-red-500 hover:bg-red-500/5 transition-all flex items-center justify-center gap-2 rounded-xl"
+            isLoading={isDeleting}
           >
             Delete Poll
           </Button>

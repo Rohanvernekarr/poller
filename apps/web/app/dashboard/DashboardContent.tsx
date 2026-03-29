@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@repo/ui/button";
 import { BarChart3, Users, Clock, Trash2, ArrowRight, Plus } from "lucide-react";
@@ -7,6 +8,20 @@ import Link from "next/link";
 import { deletePoll } from "../actions";
 
 export function DashboardContent({ polls }: { polls: any[] }) {
+  const [deletingPollId, setDeletingPollId] = useState<string | null>(null);
+
+  const handleDelete = async (pollId: string) => {
+    if (window.confirm("Are you sure you want to delete this poll?")) {
+      setDeletingPollId(pollId);
+      try {
+        await deletePoll(pollId);
+      } catch (e) {
+        setDeletingPollId(null);
+        alert("Failed to delete poll");
+      }
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto space-y-12">
       {/* Header Section */}
@@ -42,7 +57,7 @@ export function DashboardContent({ polls }: { polls: any[] }) {
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 0.4 }}
             >
-               <PollCard poll={poll} />
+               <PollCard poll={poll} isDeleting={deletingPollId === poll.id} onDelete={() => handleDelete(poll.id)} />
             </motion.div>
           ))}
         </div>
@@ -51,7 +66,7 @@ export function DashboardContent({ polls }: { polls: any[] }) {
   );
 }
 
-function PollCard({ poll }: { poll: any }) {
+function PollCard({ poll, isDeleting, onDelete }: { poll: any; isDeleting: boolean; onDelete: () => void }) {
   const totalVotes = poll._count.votes;
 
   return (
@@ -74,19 +89,16 @@ function PollCard({ poll }: { poll: any }) {
             </div>
           </div>
           
-          <form action={async (formData) => {
-             if (window.confirm("Are you sure you want to delete this poll?")) {
-               await deletePoll(poll.id);
-             }
-          }}>
-             <button 
-               type="submit"
-               className="p-4 text-foreground/20 hover:text-red-500 hover:bg-red-500/10 rounded-2xl transition-all"
-               title="Delete Poll"
-             >
-               <Trash2 className="w-5 h-5" />
-             </button>
-          </form>
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={onDelete}
+            isLoading={isDeleting}
+            className="p-4 h-12 w-12 text-foreground/20 hover:text-red-500 hover:bg-red-500/10 rounded-2xl transition-all"
+            title="Delete Poll"
+          >
+            {!isDeleting && <Trash2 className="w-5 h-5" />}
+          </Button>
         </div>
 
         {/* Mini Bar Chart */}
@@ -128,3 +140,4 @@ function PollCard({ poll }: { poll: any }) {
     </div>
   );
 }
+
