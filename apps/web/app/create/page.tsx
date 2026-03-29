@@ -7,8 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@repo
 import { Input } from "@repo/ui/input";
 import { Plus, Trash2, ArrowRight, Settings2, ChevronDown } from "lucide-react";
 import { createPoll } from "../actions";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { AlertCircle } from "lucide-react";
 
 export default function CreatePoll() {
+  const { data: session } = useSession();
   const [options, setOptions] = useState([{ id: 1, text: "" }, { id: 2, text: "" }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -30,6 +34,18 @@ export default function CreatePoll() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4 }}
       >
+        {!session && (
+          <div className="mb-6 p-4 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-gray-400 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-white">Temporary Access</p>
+              <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                You're creating this poll anonymously. Your control over this poll is temporary and linked to this browser only. 
+                <Link href="/signin" className="text-white hover:underline ml-1">Sign in</Link> to save it to your account.
+              </p>
+            </div>
+          </div>
+        )}
         <Card className="glass border-border shadow-2xl overflow-hidden relative">
           {/* Subtle gradient accent */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-border" />
