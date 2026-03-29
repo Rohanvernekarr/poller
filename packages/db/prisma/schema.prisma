@@ -18,6 +18,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   polls         Poll[]
+  comments      Comment[]
 }
 
 model Account {
@@ -115,7 +116,9 @@ model Comment {
   pollId    String
   text      String
   authorName String?
+  authorId  String?
   createdAt DateTime @default(now())
 
-  poll      Poll     @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  poll      Poll?     @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  author    User?    @relation(fields: [authorId], references: [id])
 }
