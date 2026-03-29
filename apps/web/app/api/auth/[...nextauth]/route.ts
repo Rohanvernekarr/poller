@@ -26,13 +26,7 @@ export const authOptions: NextAuthOptions = {
       },
       from: process.env.EMAIL_FROM,
       async sendVerificationRequest({ identifier: email, url, token, provider }) {
-        // We override this to send a custom 6-digit code instead of a magic link if we want,
-        // but for now let's use the magic link first to ensure it's working, then switch to OTP.
-        // Actually, the user explicitly asked for "code".
-        
         try {
-          // In standard NextAuth, 'token' is the value stored in VerificationToken.
-          // We can override the generator to make it 6 digits.
           await resend.emails.send({
             from: "Poller <auth@rohanrv.tech>",
             to: email,
