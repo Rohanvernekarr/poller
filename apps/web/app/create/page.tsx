@@ -35,13 +35,18 @@ export default function CreatePoll() {
         transition={{ duration: 0.4 }}
       >
         {!session && (
-          <div className="mb-6 p-4 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-gray-400 mt-0.5" />
-            <div className="flex-1">
-              <p className="text-sm font-medium text-white">Temporary Access</p>
-              <p className="text-xs text-gray-400 mt-1 leading-relaxed">
-                You're creating this poll anonymously. Your control over this poll is temporary and linked to this browser only. 
-                <Link href="/signin" className="text-white hover:underline ml-1">Sign in</Link> to save it to your account.
+          <div className="mb-10 p-6 rounded-[2rem] bg-zinc-900/50 border border-zinc-900 flex items-center gap-6 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 blur-3xl rounded-full" />
+            <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-zinc-900 flex items-center justify-center border border-white/5">
+              <AlertCircle className="w-6 h-6 text-zinc-500" />
+            </div>
+            <div className="flex-1 space-y-1">
+              <p className="text-base font-black text-white tracking-tight">Temporary Management</p>
+              <p className="text-xs text-zinc-500 font-medium leading-relaxed max-w-md">
+                You're creating this poll as a guest. Your control is limited to this browser session. 
+                <Link href="/signin" className="text-white hover:underline transition-all font-bold ml-1 inline-flex items-center gap-1">
+                  Sign in to save forever <ArrowRight className="w-3 h-3" />
+                </Link>
               </p>
             </div>
           </div>
