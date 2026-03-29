@@ -14,23 +14,25 @@ export function Navigation() {
     <header className="fixed top-0 w-full z-50 border-b border-border bg-background/50 backdrop-blur-xl">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-6">
         {/* Left Side: Logo (Always) */}
-        <div className="flex-1 flex items-center">
+        <div className="flex-1 flex items-center gap-8">
           <Link href="/" className="text-xl font-black uppercase tracking-tight text-foreground">
             Poller
           </Link>
+          {session && (
+            <Link 
+              href="/dashboard" 
+              className={`text-[11px] font-black uppercase tracking-widest transition-all ${pathname === '/dashboard' ? 'text-foreground' : 'text-foreground/40 hover:text-foreground'}`}
+              title="My Dashboard"
+            >
+              Dashboard
+            </Link>
+          )}
         </div>
         
         {/* Right Side: Dashboard & User Menu */}
         <div className="flex-1 flex items-center justify-end gap-6 text-foreground">
           {session ? (
             <div className="flex items-center gap-6">
-              <Link 
-                href="/dashboard" 
-                className="text-[10px] font-black uppercase tracking-widest text-foreground/40 hover:text-foreground transition-colors"
-                title="My Dashboard"
-              >
-                Dashboard
-              </Link>
               <div className="flex items-center gap-4">
                 <div className="hidden sm:flex flex-col items-end">
                   <span className="text-[9px] uppercase tracking-tighter text-foreground/30 font-black">Account</span>
