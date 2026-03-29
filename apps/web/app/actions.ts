@@ -2,8 +2,13 @@
 
 import { prisma } from "@repo/db";
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]/route";
 
 export async function createPoll(formData: FormData) {
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id;
+  
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
   const allowMultipleVotes = formData.get("allowMultipleVotes") === "true";
@@ -41,6 +46,7 @@ export async function createPoll(formData: FormData) {
       hideShareButton,
       anonymizeData,
       resultsVisibility,
+      creatorId: userId,
       options: {
         create: options.map((opt) => ({
           text: opt,
