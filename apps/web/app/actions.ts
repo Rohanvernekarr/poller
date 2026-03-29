@@ -4,11 +4,12 @@ import { prisma } from "@repo/db";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/route";
+import { revalidatePath } from "next/cache";
 
 export async function createPoll(formData: FormData) {
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
-  
+
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
   const allowMultipleVotes = formData.get("allowMultipleVotes") === "true";
@@ -18,7 +19,7 @@ export async function createPoll(formData: FormData) {
   const hideShareButton = formData.get("hideShareButton") === "true";
   const anonymizeData = formData.get("anonymizeData") === "true";
   const resultsVisibility = (formData.get("resultsVisibility") || "PUBLIC") as string;
-  
+
   // Extract all options
   const options: string[] = [];
   for (const [key, value] of formData.entries()) {
@@ -55,6 +56,60 @@ export async function createPoll(formData: FormData) {
     },
   });
 
-  // Redirect to the newly created poll
-  redirect(`/poll/${poll.id}`);
+  // Redirect to dashboard if logged in, otherwise to poll page
+  if (userId) {
+    redirect("/dashboard");
+  } else {
+    redirect(`/poll/${poll.id}`);
+  }
+}
+
+export async function deletePoll(pollId: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  const poll = await prisma.poll.findUnique({
+    where: { id: pollId },
+    select: { creatorId: true },
+  });
+
+  if (poll?.creatorId !== session.user.id) {
+    throw new Error("You do not have permission to delete this poll.");
+  }
+
+  await prisma.poll.delete({
+    where: { id: pollId },
+  });
+
+  revalidatePath("/dashboard");
+}
+
+export async function updatePollSettings(pollId: string, data: {
+  allowComments?: boolean;
+  resultsVisibility?: string;
+  allowMultipleVotes?: boolean;
+  hideShareButton?: boolean;
+  anonymizeData?: boolean;
+}) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  const poll = await prisma.poll.findUnique({
+    where: { id: pollId },
+    select: { creatorId: true },
+  });
+
+  if (poll?.creatorId !== session.user.id) {
+    throw new Error("You do not have permission to update this poll.");
+  }
+
+  await prisma.poll.update({
+    where: { id: pollId },
+    data,
+  });
+
+  revalidatePath(`/poll/${pollId}`);
+  revalidatePath("/dashboard");
 }
