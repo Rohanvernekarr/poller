@@ -17,9 +17,9 @@ export function Navigation() {
         <div className="flex-1 flex items-center gap-4">
           {!isHome ? (
             <Link 
-              href="/" 
+              href={(session && pathname !== "/dashboard") ? "/dashboard" : "/"} 
               className="w-9 h-9 flex items-center justify-center rounded-full border border-border hover:bg-border transition-all text-foreground group"
-              aria-label="Back to home"
+              aria-label="Go back"
             >
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
             </Link>
@@ -39,21 +39,30 @@ export function Navigation() {
           </div>
         )}
         
-        {/* Right Side: Create button or User Menu */}
-        <div className="flex-1 flex items-center justify-end gap-6">
+        {/* Right Side: Dashboard & User Menu */}
+        <div className="flex-1 flex items-center justify-end gap-6 text-foreground">
           {session ? (
-            <div className="flex items-center gap-4">
-              <div className="hidden sm:flex flex-col items-end">
-                <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Logged in as</span>
-                <span className="text-xs font-medium text-foreground">{session.user?.email}</span>
-              </div>
-              <button 
-                onClick={() => signOut()}
-                className="w-9 h-9 flex items-center justify-center rounded-full border border-border hover:bg-red-500/10 hover:border-red-500/20 hover:text-red-500 transition-all text-gray-400"
-                title="Sign Out"
+            <div className="flex items-center gap-6">
+              <Link 
+                href="/dashboard" 
+                className="text-xs font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors"
+                title="My Dashboard"
               >
-                <LogOut className="w-4 h-4" />
-              </button>
+                Dashboard
+              </Link>
+              <div className="flex items-center gap-4">
+                <div className="hidden sm:flex flex-col items-end">
+                  <span className="text-[10px] uppercase tracking-widest text-zinc-600 font-bold">Account</span>
+                  <span className="text-xs font-medium text-white">{session.user?.email}</span>
+                </div>
+                <button 
+                  onClick={() => signOut({ callbackUrl: "/" })}
+                  className="w-9 h-9 flex items-center justify-center rounded-xl border border-white/10 hover:bg-white hover:text-black transition-all text-zinc-500"
+                  title="Sign Out"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           ) : (
             <Link href="/signin">
