@@ -24,7 +24,7 @@ interface ResultsUIProps {
   poll: any;
 }
 
-export function ResultsUI({ poll }: { poll: any }) {
+export default function ResultsUI({ poll }: ResultsUIProps) {
   const totalVotes = poll?.totalVotes || 0;
   const topOption = poll?.options?.length > 0 
     ? poll.options.reduce((prev: any, current: any) => (prev.voteCount > current.voteCount) ? prev : current)

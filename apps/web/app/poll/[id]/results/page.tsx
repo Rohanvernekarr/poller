@@ -1,6 +1,6 @@
 import { getPollResults } from "../../../actions";
 import { notFound, redirect } from "next/navigation";
-import { ResultsUI } from "./ResultsUI";
+import ResultsUI from "./ResultsUI";
 
 export default async function PollResultsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

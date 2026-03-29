@@ -10,6 +10,7 @@ import {
   Settings2,
   Share2,
   CheckCircle2,
+  Copy,
   MessageSquare,
   Mail,
   Globe,
@@ -124,44 +125,22 @@ export function PollSidebar({
                 />
                 <button
                   onClick={onCopyLink}
-                  className={`px-5 flex items-center justify-center transition-colors font-bold text-sm ${
+                  className={`p-2 flex items-center justify-center transition-colors font-bold text-sm ${
                     copied
-                      ? "bg-green-500 text-white"
+                      ? "bg-gray-700 text-white"
                       : "bg-foreground/10 hover:bg-foreground/20 text-foreground"
                   }`}
                 >
-                  {copied ? <CheckCircle2 className="w-4 h-4" /> : "Copy"}
+                  {copied ? <CheckCircle2 className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 </button>
               </div>
 
-              <div className="grid grid-cols-4 gap-3">
-                <SocialIcon
-                  icon={<MessageSquare className="w-5 h-5" />}
-                  color="hover:bg-green-500"
-                />
-                <SocialIcon
-                  icon={<Mail className="w-5 h-5" />}
-                  color="hover:bg-blue-500"
-                />
-                <SocialIcon
-                  icon={<Globe className="w-5 h-5" />}
-                  color="hover:bg-foreground hover:text-background"
-                />
-                <SocialIcon
-                  icon={
-                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
-                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                    </svg>
-                  }
-                  color="hover:bg-foreground hover:text-background"
-                />
-              </div>
+              
             </div>
           </div>
         </motion.div>
       )}
 
-      {/* Owner Quick Actions (Restructured into Settings Modal later, but adding the button here) */}
       {isOwner && (
         <motion.div
           initial={{ opacity: 0, x: 10 }}
@@ -172,7 +151,7 @@ export function PollSidebar({
           <Link href={`/poll/${id}/results`} className="block w-full">
             <Button
               variant="outline"
-              className="w-full h-12 text-sm font-semibold border-foreground/20 hover:border-foreground bg-foreground text-background hover:opacity-90 transition-all flex items-center justify-center gap-2 rounded-xl mb-3"
+              className="w-full h-12 text-sm font-semibold border-foreground/20 hover:border-foreground bg-foreground hover:bg-foreground text-background transition-all flex items-center justify-center gap-2 rounded-xl mb-3"
             >
               <BarChart3 className="w-4 h-4" />
               Advanced Analytics
