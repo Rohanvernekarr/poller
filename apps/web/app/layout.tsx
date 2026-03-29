@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "./Navigation";
 import { Providers } from "./Providers";
 
-const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"] });
+const outfit = Outfit({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"] });
 
 export const metadata: Metadata = {
   title: "Poller | The simplest polling platform",
@@ -18,10 +18,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={outfit.className}>
         <Providers>
           <Navigation />
-          <main className="min-h-screen w-full pt-16">{children}</main>
+          <main className="min-h-screen w-full pt-12">{children}</main>
         </Providers>
       </body>
     </html>

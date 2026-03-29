@@ -14,46 +14,47 @@ export default function Home() {
         <div className="absolute inset-0 bg-primary/5 rounded-full" />
       </div>
 
-      <main className="relative pt-32 pb-16 px-6 mx-auto max-w-7xl">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <main className="relative pt-32 pb-12 px-6 mx-auto max-w-7xl">
+        <div className="grid lg:grid-cols-2 gap-8 items-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-5xl sm:text-7xl font-bold tracking-tight mb-8 leading-[1.1] text-foreground">
-              The simplest way to <br />
-              <span>
-                gather opinions
-              </span>
+            <h1 className="text-4xl sm:text-6xl font-black tracking-tight mb-6 leading-[0.9] text-foreground uppercase">
+              The simplest <br />
+              <span className="text-foreground/20">
+                way to gather 
+              </span> <br />
+              opinions
             </h1>
-            <p className="text-xl text-gray-400 mb-10 max-w-lg">
+            <p className="text-xl text-foreground/40 mb-10 max-w-lg font-medium leading-relaxed">
               Create beautiful, fast, and secure polls in seconds. Share the link
               and watch the results roll in real-time. 
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/create">
-                <Button size="lg" className="w-full sm:w-auto px-8 font-semibold text-lg gap-2">
+                <Button size="lg" className="h-14 px-10 rounded-2xl bg-foreground text-background font-black uppercase tracking-widest text-base hover:opacity-90 transition-all shadow-xl shadow-foreground/10">
                   <Zap className="w-5 h-5" />
-                  Start Polling Now
+                  Start Polling
                 </Button>
               </Link>
             </div>
             
-            <div className="mt-16 grid grid-cols-2 gap-8">
+            <div className="mt-12 grid grid-cols-2 gap-8">
               <div className="flex flex-col gap-2">
-                <div className="p-3 w-fit rounded-xl bg-foreground/5 border border-foreground/10 text-primary">
-                  <BarChart3 className="w-6 h-6" />
+                <div className="p-2.5 w-fit rounded-xl bg-foreground/5 border border-border text-foreground">
+                  <BarChart3 className="w-5 h-5" />
                 </div>
-                <h3 className="font-semibold text-foreground">Live Results</h3>
-                <p className="text-sm text-gray-500">Watch the votes come in real-time with beautiful charts.</p>
+                <h3 className="font-black uppercase tracking-widest text-[10px] text-foreground/40 italic">Live Results</h3>
+                <p className="text-xs text-foreground/60 font-medium">Real-time charts as votes arrive.</p>
               </div>
               <div className="flex flex-col gap-2">
-                <div className="p-3 w-fit rounded-xl bg-foreground/5 border border-foreground/10 text-secondary">
-                  <Users className="w-6 h-6" />
+                <div className="p-2.5 w-fit rounded-xl bg-foreground/5 border border-border text-foreground">
+                  <Users className="w-5 h-5" />
                 </div>
-                <h3 className="font-semibold text-foreground">Spam Protection</h3>
-                <p className="text-sm text-gray-500">Advanced browser fingerprinting keeps your polls fair.</p>
+                <h3 className="font-black uppercase tracking-widest text-[10px] text-foreground/40 italic">Protection</h3>
+                <p className="text-xs text-foreground/60 font-medium">Advanced fingerprinting prevents spam.</p>
               </div>
             </div>
           </motion.div>
@@ -67,24 +68,19 @@ export default function Home() {
             <Card className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md -rotate-6 scale-95 opacity-50 pointer-events-none select-none z-0 border-white/5" />
             <Card className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md rotate-3 scale-95 opacity-80 pointer-events-none select-none z-10 border-white/5" />
             
-            <Card className="relative w-full max-w-md mx-auto z-20 shadow-2xl glass border-border">
+            <Card className="relative w-full max-w-sm ml-auto z-20 shadow-2xl glass border-border bg-background/50 backdrop-blur-sm rounded-[2rem] overflow-hidden">
               <CardContent className="p-8">
-                <h3 className="text-2xl font-bold mb-6 text-foreground">What's your favorite framework?</h3>
+                <h3 className="text-xl font-black mb-6 text-foreground uppercase tracking-tight leading-none italic">Favorite framework?</h3>
                 <div className="space-y-4">
-                  <div className="relative h-14 rounded-xl overflow-hidden glass border-foreground/20 flex items-center px-4 cursor-pointer hover:bg-foreground/5 transition-colors">
+                  <div className="relative h-12 rounded-xl border-border flex items-center px-4 cursor-pointer hover:bg-foreground/5 transition-colors">
                     <div className="absolute inset-y-0 left-0 bg-foreground/10 w-[65%]" />
-                    <span className="relative z-10 font-medium text-foreground">Next.js</span>
-                    <span className="relative z-10 ml-auto font-bold text-foreground">65%</span>
+                    <span className="relative z-10 font-black text-foreground uppercase text-[10px] tracking-widest">Next.js</span>
+                    <span className="relative z-10 ml-auto font-black text-foreground/60 text-xs">65%</span>
                   </div>
-                  <div className="relative h-14 rounded-xl overflow-hidden glass border-border flex items-center px-4 cursor-pointer hover:bg-foreground/5 transition-colors">
+                  <div className="relative h-12 rounded-xl border-border flex items-center px-4 cursor-pointer hover:bg-foreground/5 transition-colors">
                     <div className="absolute inset-y-0 left-0 bg-foreground/5 w-[20%]" />
-                    <span className="relative z-10 font-medium text-foreground">SvelteKit</span>
-                    <span className="relative z-10 ml-auto font-bold text-gray-400">20%</span>
-                  </div>
-                  <div className="relative h-14 rounded-xl overflow-hidden glass border-border flex items-center px-4 cursor-pointer hover:bg-foreground/5 transition-colors">
-                    <div className="absolute inset-y-0 left-0 bg-foreground/5 w-[15%]" />
-                    <span className="relative z-10 font-medium text-foreground">Nuxt</span>
-                    <span className="relative z-10 ml-auto font-bold text-gray-400">15%</span>
+                    <span className="relative z-10 font-black text-foreground uppercase text-[10px] tracking-widest">SvelteKit</span>
+                    <span className="relative z-10 ml-auto font-black text-foreground/20 text-xs">20%</span>
                   </div>
                 </div>
               </CardContent>

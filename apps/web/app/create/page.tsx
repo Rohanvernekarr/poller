@@ -10,6 +10,7 @@ import { createPoll } from "../actions";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { AlertCircle } from "lucide-react";
+import { TechnicalBackButton } from "../components/TechnicalBackButton";
 
 export default function CreatePoll() {
   const { data: session } = useSession();
@@ -28,24 +29,28 @@ export default function CreatePoll() {
   };
 
   return (
-    <div className="min-h-screen py-20 px-6 max-w-2xl mx-auto">
+    <div className="min-h-screen pt-0 pb-20 px-6 max-w-2xl mx-auto">
+      <TechnicalBackButton 
+        href={session ? "/dashboard" : "/"} 
+        text={session ? "Back to Dashboard" : "Back to Home"} 
+      />
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4 }}
       >
         {!session && (
-          <div className="mb-10 p-6 rounded-[2rem] bg-zinc-900/50 border border-zinc-900 flex items-center gap-6 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 blur-3xl rounded-full" />
-            <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-zinc-900 flex items-center justify-center border border-white/5">
-              <AlertCircle className="w-6 h-6 text-zinc-500" />
+          <div className="mb-10 p-10 rounded-[2.5rem] bg-foreground/5 border border-border flex items-center gap-8 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-foreground/5 blur-3xl rounded-full" />
+            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-foreground text-background flex items-center justify-center">
+              <AlertCircle className="w-6 h-6" />
             </div>
-            <div className="flex-1 space-y-1">
-              <p className="text-base font-black text-white tracking-tight">Temporary Management</p>
-              <p className="text-xs text-zinc-500 font-medium leading-relaxed max-w-md">
-                You're creating this poll as a guest. Your control is limited to this browser session. 
-                <Link href="/signin" className="text-white hover:underline transition-all font-bold ml-1 inline-flex items-center gap-1">
-                  Sign in to save forever <ArrowRight className="w-3 h-3" />
+            <div className="flex-1 space-y-2">
+              <p className="text-sm font-black uppercase tracking-widest text-foreground italic">Guest Session</p>
+              <p className="text-xs text-foreground/40 font-black uppercase tracking-widest leading-loose max-w-md">
+                You're creating this poll as a guest. 
+                <Link href="/signin" className="text-foreground hover:underline transition-all ml-1 inline-flex items-center gap-2">
+                  Sign in for permanent control <ArrowRight className="w-3 h-3" />
                 </Link>
               </p>
             </div>
@@ -55,9 +60,9 @@ export default function CreatePoll() {
           {/* Subtle gradient accent */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-border" />
           
-          <CardHeader>
-            <CardTitle>Create a new Poll</CardTitle>
-            <CardDescription className="text-foreground/70">Complete the details below to generate your shareable link.</CardDescription>
+          <CardHeader className="space-y-6 pt-12 text-center pb-12">
+            <CardTitle className="text-5xl font-black uppercase tracking-tight italic leading-none">Create New Poll</CardTitle>
+            <CardDescription className="text-foreground/40 font-black uppercase tracking-widest text-[10px] max-w-sm mx-auto">Complete the details below to generate your shareable link.</CardDescription>
           </CardHeader>
           <CardContent>
             <form 
@@ -75,19 +80,19 @@ export default function CreatePoll() {
               }} 
               className="space-y-6"
             >
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">Poll Title Question</label>
-                <Input name="title" placeholder="e.g. What is your favorite framework?" required />
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase tracking-widest text-foreground/40 ml-1">Poll Title Question</label>
+                <Input name="title" placeholder="e.g. What is your favorite framework?" required className="h-14 rounded-2xl bg-foreground/[0.02] border-border focus:ring-foreground/20" />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">Description (Optional)</label>
-                <Input name="description" placeholder="Add some context..." />
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase tracking-widest text-foreground/40 ml-1">Description (Optional)</label>
+                <Input name="description" placeholder="Add some context..." className="h-14 rounded-2xl bg-foreground/[0.02] border-border focus:ring-foreground/20" />
               </div>
 
-              <div className="space-y-3 pt-4">
-                <label className="text-sm font-medium text-foreground flex justify-between items-center">
-                  <span>Options</span>
-                  <span className="text-xs text-foreground/60">{options.length}/10</span>
+              <div className="space-y-4 pt-6">
+                <label className="text-[10px] font-black uppercase tracking-widest text-foreground/40 flex justify-between items-center ml-1">
+                  <span>Poll Options</span>
+                  <span className="text-[10px]">{options.length}/10</span>
                 </label>
                 
                 <AnimatePresence>
@@ -99,14 +104,14 @@ export default function CreatePoll() {
                       exit={{ opacity: 0, height: 0 }}
                       className="flex gap-3 items-center group"
                     >
-                      <div className="w-8 flex-shrink-0 text-center text-sm font-bold text-foreground/40 group-hover:text-foreground transition-colors">
+                      <div className="w-10 flex-shrink-0 text-center text-[10px] font-black text-foreground/20 group-hover:text-foreground transition-colors uppercase">
                         {index + 1}.
                       </div>
                       <Input 
                         name={`option-${option.id}`} 
                         placeholder={`Option ${index + 1}`} 
                         required 
-                        className="flex-1"
+                        className="flex-1 h-14 rounded-2xl bg-foreground/[0.02] border-border"
                       />
                       {options.length > 2 && (
                         <Button 
@@ -128,7 +133,7 @@ export default function CreatePoll() {
                 <Button 
                   type="button" 
                   variant="outline" 
-                  className="w-full border-dashed py-6 text-foreground/70 hover:text-foreground"
+                  className="w-full border-dashed py-8 rounded-2xl text-[10px] font-black uppercase tracking-widest text-foreground/40 hover:text-foreground hover:border-foreground/40 transition-all bg-foreground/[0.01]"
                   onClick={handleAddOption}
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -136,30 +141,28 @@ export default function CreatePoll() {
                 </Button>
               )}
 
-              <div className="flex items-center justify-between pt-4 pb-2">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input type="checkbox" name="hasOtherOption" value="true" className="w-5 h-5 rounded border-foreground/20 bg-foreground/5 text-foreground focus:ring-foreground focus:ring-offset-background" />
-                  <span className="text-sm font-medium text-foreground">Add "Other" option</span>
+              <div className="flex flex-col gap-6 pt-6">
+                <label className="flex items-center gap-4 cursor-pointer group">
+                  <input type="checkbox" name="hasOtherOption" value="true" className="w-6 h-6 rounded-lg border-foreground/20 bg-foreground/5 text-foreground focus:ring-foreground accent-foreground" />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-foreground group-hover:opacity-100 opacity-60 transition-opacity">Add "Other" option</span>
+                </label>
+
+                <label className="flex items-center gap-4 cursor-pointer group pt-6 border-t border-border">
+                  <input type="checkbox" name="allowMultipleVotes" value="true" className="w-6 h-6 rounded-lg border-foreground/20 bg-foreground/5 text-foreground focus:ring-foreground accent-foreground" />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-foreground group-hover:opacity-100 opacity-60 transition-opacity">Allow multiple votes per person</span>
                 </label>
               </div>
 
-              <div className="flex items-center justify-between pt-6 border-t border-border">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input type="checkbox" name="allowMultipleVotes" value="true" className="w-5 h-5 rounded border-foreground/20 bg-foreground/5 text-foreground focus:ring-foreground focus:ring-offset-background" />
-                  <span className="text-sm font-medium text-foreground">Allow multiple votes per person</span>
-                </label>
-              </div>
-
-              <div className="pt-2 border-t border-border">
+              <div className="pt-4 border-t border-border mt-4">
                 <Button
                   type="button"
                   variant="ghost"
-                  className="w-full justify-between font-normal hover:bg-foreground/5"
+                  className="w-full justify-between h-14 rounded-2xl bg-foreground/[0.03] hover:bg-foreground/[0.06] px-6"
                   onClick={() => setShowAdvanced(!showAdvanced)}
                 >
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest">
                     <Settings2 className="w-4 h-4" />
-                    Advanced Settings
+                    Advanced Controls
                   </span>
                   <ChevronDown className={`w-4 h-4 transition-transform ${showAdvanced ? "rotate-180" : ""}`} />
                 </Button>
@@ -172,46 +175,21 @@ export default function CreatePoll() {
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="space-y-4 pt-4 pb-2 px-2">
-                        <label className="flex items-center gap-3 cursor-pointer">
-                          <input type="checkbox" name="requireNames" value="true" className="w-5 h-5 rounded border-foreground/20 bg-foreground/5 text-foreground flex-shrink-0 mt-0.5 self-start" />
-                          <div className="flex flex-col">
-                            <span className="text-sm font-medium text-foreground">Require participant names</span>
-                            <span className="text-xs text-foreground/60">Voters must enter their name to submit a vote.</span>
-                          </div>
-                        </label>
-                        
-                        <label className="flex items-center gap-3 cursor-pointer">
-                          <input type="checkbox" name="allowComments" value="true" className="w-5 h-5 rounded border-foreground/20 bg-foreground/5 text-foreground flex-shrink-0 mt-0.5 self-start" />
-                          <div className="flex flex-col">
-                            <span className="text-sm font-medium text-foreground">Allow comments</span>
-                            <span className="text-xs text-foreground/60">Enable a discussion section on the poll page.</span>
-                          </div>
-                        </label>
+                      <div className="space-y-8 pt-10 pb-4 px-2">
+                        <SettingToggle name="requireNames" title="Require names" desc="Voters must identify themselves" />
+                        <SettingToggle name="allowComments" title="Allow comments" desc="Enable the public discussion board" />
+                        <SettingToggle name="hideShareButton" title="Stealth Mode" desc="Hide share icons from participants" />
+                        <SettingToggle name="anonymizeData" title="Anonymize IP" desc="Fully encrypt participant footprints" />
 
-                        <label className="flex items-center gap-3 cursor-pointer">
-                          <input type="checkbox" name="hideShareButton" value="true" className="w-5 h-5 rounded border-foreground/20 bg-foreground/5 text-foreground flex-shrink-0" />
-                          <span className="text-sm font-medium text-foreground">Hide share button</span>
-                        </label>
-
-                        <label className="flex items-center gap-3 cursor-pointer">
-                          <input type="checkbox" name="anonymizeData" value="true" className="w-5 h-5 rounded border-foreground/20 bg-foreground/5 text-foreground flex-shrink-0" />
-                          <div className="flex flex-col">
-                            <span className="text-sm font-medium text-foreground">Anonymize voter data</span>
-                            <span className="text-xs text-foreground/60">Hide voter IP footprints from admin exports.</span>
-                          </div>
-                        </label>
-
-                        <div className="pt-2">
-                          <label className="text-sm font-medium text-foreground block mb-2">Results Visibility</label>
+                        <div className="pt-6 border-t border-border">
+                          <label className="text-[10px] font-black uppercase tracking-widest text-foreground/40 block mb-4 ml-1">Results Visibility</label>
                           <select 
                             name="resultsVisibility" 
-                            className="w-full h-11 px-3 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground cursor-pointer appearance-none"
-                            style={{ color: 'inherit' }}
+                            className="w-full h-14 px-5 rounded-2xl border border-border bg-background text-foreground text-[10px] font-black uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-foreground cursor-pointer appearance-none shadow-sm"
                           >
-                            <option value="PUBLIC" className="bg-background text-foreground">Always public</option>
-                            <option value="ADMIN_ONLY" className="bg-background text-foreground">Admin only</option>
-                            <option value="HIDDEN" className="bg-background text-foreground">Nobody (Hidden)</option>
+                            <option value="PUBLIC">Always public</option>
+                            <option value="ADMIN_ONLY">Admin only</option>
+                            <option value="HIDDEN">Nobody (Hidden)</option>
                           </select>
                         </div>
                       </div>
@@ -223,15 +201,32 @@ export default function CreatePoll() {
               <Button 
                 type="submit" 
                 size="lg" 
-                className="w-full mt-4 bg-foreground text-background hover:bg-foreground/90 border-0"
+                className="w-full mt-8 h-16 bg-foreground text-background hover:opacity-90 rounded-2xl font-black uppercase tracking-widest text-lg shadow-2xl shadow-foreground/20"
                 isLoading={isSubmitting}
               >
-                Create your Poll <ArrowRight className="w-5 h-5 ml-2" />
+                Create your Poll <ArrowRight className="w-5 h-5 ml-4" />
               </Button>
             </form>
           </CardContent>
         </Card>
       </motion.div>
     </div>
+  );
+}
+
+function SettingToggle({ name, title, desc }: { name: string; title: string; desc: string }) {
+  return (
+    <label className="flex items-center gap-5 cursor-pointer group">
+      <input 
+        type="checkbox" 
+        name={name} 
+        value="true" 
+        className="w-6 h-6 rounded-lg border-foreground/20 bg-foreground/5 text-foreground focus:ring-foreground accent-foreground" 
+      />
+      <div className="flex flex-col gap-1">
+        <span className="text-[11px] font-black uppercase tracking-widest text-foreground group-hover:opacity-100 opacity-60 transition-opacity italic">{title}</span>
+        <span className="text-[11px] font-black uppercase tracking-tight text-foreground/40 italic">{desc}</span>
+      </div>
+    </label>
   );
 }

@@ -113,3 +113,47 @@ export async function updatePollSettings(pollId: string, data: {
   revalidatePath(`/poll/${pollId}`);
   revalidatePath("/dashboard");
 }
+
+export async function getPollResults(pollId: string) {
+  const session = await getServerSession(authOptions);
+  
+  const poll = await prisma.poll.findUnique({
+    where: { id: pollId },
+    include: {
+      creator: { select: { name: true, email: true } },
+      options: {
+        include: { _count: { select: { votes: true } } }
+      },
+      votes: {
+        orderBy: { createdAt: "desc" },
+        include: { option: { select: { text: true } } }
+      },
+      _count: { select: { votes: true } }
+    }
+  });
+
+  if (!poll) throw new Error("Poll not found");
+
+  const isOwner = session?.user?.id === poll.creatorId;
+  const isPublic = poll.resultsVisibility === "PUBLIC";
+
+  if (!isOwner && !isPublic) {
+    throw new Error("You do not have permission to view these analytics.");
+  }
+
+  return {
+    ...poll,
+    isOwner,
+    totalVotes: poll._count.votes,
+    options: poll.options.map((opt: any) => ({
+      ...opt,
+      voteCount: opt._count.votes
+    })),
+    votes: poll.votes.map((v: any) => ({
+      ...v,
+      // Mask IP/Fingerprint for non-owners
+      ipAddress: isOwner && !poll.anonymizeData ? v.ipAddress : "Redacted",
+      fingerprintHash: isOwner ? v.fingerprintHash : "Redacted"
+    }))
+  };
+}

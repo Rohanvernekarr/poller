@@ -40,7 +40,7 @@ export default async function PollPage({ params }: { params: Promise<{ id: strin
   const hasVoted = cookieStore.get(`voted_${poll.id}`)?.value === "true";
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-4 sm:px-6 w-full max-w-7xl mx-auto">
+    <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 w-full max-w-7xl mx-auto">
       <PollUI 
         isOwner={isOwner}
         initialPoll={{

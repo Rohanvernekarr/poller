@@ -15,8 +15,10 @@ import {
   Globe,
 } from "lucide-react";
 import { Button } from "@repo/ui/button";
+import Link from "next/link";
 
 interface PollSidebarProps {
+  id: string;
   totalVotes: number;
   topOption?: { text: string };
   createdAtFormatted: string;
@@ -30,6 +32,7 @@ interface PollSidebarProps {
 }
 
 export function PollSidebar({
+  id,
   totalVotes,
   topOption,
   createdAtFormatted,
@@ -51,7 +54,7 @@ export function PollSidebar({
       >
         <div className="space-y-4">
           <div className="flex items-center gap-2 px-2">
-            <BarChart3 className="w-5 h-5 text-violet-500" />
+            <BarChart3 className="w-5 h-5 text-foreground" />
             <h3 className="text-xl font-bold">Analytics</h3>
           </div>
           <div className="space-y-3">
@@ -109,11 +112,11 @@ export function PollSidebar({
         >
           <div className="space-y-4">
             <div className="flex items-center gap-2 px-2">
-              <Share2 className="w-5 h-5 text-violet-500" />
+              <Share2 className="w-5 h-5 text-foreground" />
               <h3 className="text-lg font-bold">Share Poll</h3>
             </div>
             <div className="space-y-4 px-2">
-              <div className="flex bg-foreground/5 border border-border rounded-xl overflow-hidden group focus-within:ring-2 focus-within:ring-violet-500 transition-shadow">
+              <div className="flex bg-foreground/5 border border-border rounded-xl overflow-hidden group focus-within:ring-2 focus-within:ring-foreground/50 transition-shadow">
                 <input
                   readOnly
                   value={typeof window !== "undefined" ? window.location.href : ""}
@@ -142,7 +145,7 @@ export function PollSidebar({
                 />
                 <SocialIcon
                   icon={<Globe className="w-5 h-5" />}
-                  color="hover:bg-violet-500"
+                  color="hover:bg-foreground hover:text-background"
                 />
                 <SocialIcon
                   icon={
@@ -166,12 +169,22 @@ export function PollSidebar({
           transition={{ duration: 0.4, delay: 0.2 }}
           className="pt-6 border-t border-border mt-2"
         >
+          <Link href={`/poll/${id}/results`} className="block w-full">
+            <Button
+              variant="outline"
+              className="w-full h-12 text-sm font-semibold border-foreground/20 hover:border-foreground bg-foreground text-background hover:opacity-90 transition-all flex items-center justify-center gap-2 rounded-xl mb-3"
+            >
+              <BarChart3 className="w-4 h-4" />
+              Advanced Analytics
+            </Button>
+          </Link>
+          
           <Button
             onClick={onOpenSettings}
             variant="outline"
-            className="w-full h-12 text-sm font-semibold border-violet-500/20 hover:border-violet-500 bg-violet-500/5 hover:bg-violet-500/10 transition-all flex items-center justify-center gap-2 rounded-xl mb-3"
+            className="w-full h-12 text-sm font-semibold border-foreground/20 hover:border-foreground bg-foreground/5 hover:bg-foreground/10 transition-all flex items-center justify-center gap-2 rounded-xl mb-3"
           >
-            <Settings2 className="w-4 h-4 text-violet-500" />
+            <Settings2 className="w-4 h-4 text-foreground" />
             Poll Settings
           </Button>
           <Button

@@ -44,8 +44,8 @@ export function PollSettingsModal({
           >
             <div className="flex items-center justify-between p-6 border-b border-border">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-violet-500/10 flex items-center justify-center">
-                  <Settings2 className="w-5 h-5 text-violet-500" />
+                <div className="w-10 h-10 rounded-2xl bg-foreground/10 flex items-center justify-center">
+                  <Settings2 className="w-5 h-5 text-foreground" />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold">Poll Settings</h3>
@@ -112,7 +112,7 @@ export function PollSettingsModal({
                       value={settings.resultsVisibility || "PUBLIC"}
                       onChange={(e) => onUpdate("resultsVisibility", e.target.value)}
                       disabled={isUpdating}
-                      className="w-full h-12 px-4 rounded-xl border border-border bg-background text-foreground text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-violet-500 cursor-pointer appearance-none shadow-sm"
+                      className="w-full h-12 px-4 rounded-xl border border-border bg-background text-foreground text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-foreground cursor-pointer appearance-none shadow-sm"
                     >
                       <option value="PUBLIC">Always Public</option>
                       <option value="ADMIN_ONLY">Admin Only</option>
@@ -156,8 +156,8 @@ function SettingToggle({
   return (
     <div className="flex items-center justify-between group">
       <div className="flex items-start gap-4">
-        <div className="w-10 h-10 rounded-2xl bg-foreground/5 flex items-center justify-center flex-shrink-0 group-hover:bg-violet-500/10 transition-colors">
-          <div className="text-foreground/40 group-hover:text-violet-500 transition-colors">
+        <div className="w-10 h-10 rounded-2xl bg-foreground/5 flex items-center justify-center flex-shrink-0 group-hover:bg-foreground/10 transition-colors">
+          <div className="text-foreground/40 group-hover:text-foreground transition-colors">
             {icon}
           </div>
         </div>
@@ -174,7 +174,7 @@ function SettingToggle({
           onChange={(e) => onChange(e.target.checked)}
           disabled={disabled}
         />
-        <div className="w-12 h-6 bg-foreground/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-violet-500 transition-all"></div>
+        <div className="w-12 h-6 bg-foreground/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-foreground transition-all"></div>
       </label>
     </div>
   );

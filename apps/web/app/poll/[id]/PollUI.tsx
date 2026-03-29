@@ -14,6 +14,7 @@ import { PollVoting } from "./components/PollVoting";
 import { PollResults } from "./components/PollResults";
 import { PollSidebar } from "./components/PollSidebar";
 import { PollSettingsModal } from "./components/PollSettingsModal";
+import { TechnicalBackButton } from "../../components/TechnicalBackButton";
 
 interface PollOption { id: string; pollId: string; text: string; voteCount: number; }
 interface Poll {
@@ -71,7 +72,11 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
   const topOption = displayPoll.options.reduce((prev, current) => (prev.voteCount > current.voteCount) ? prev : current);
 
   return (
-    <div className="w-full max-w-7xl mx-auto selection:bg-violet-500/30 pb-20">
+    <div className="w-full max-w-7xl mx-auto selection:bg-foreground/20 pb-20 px-6 pt-0">
+      <TechnicalBackButton 
+        href={isOwner ? "/dashboard" : "/"} 
+        text={isOwner ? "Back to Dashboard" : "Back to Home"} 
+      />
       <Card className="glass border-border shadow-2xl rounded-[2.5rem] overflow-hidden bg-background/50 backdrop-blur-sm">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
           <div className="lg:col-span-8 p-8 sm:p-12 border-b lg:border-b-0 lg:border-r border-border">
@@ -90,9 +95,9 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
                     <p className="text-lg text-foreground/60 font-medium">Your choice has been recorded successfully.</p>
                   </div>
                   <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm">
-                    <Button onClick={() => { setVoteSuccess(false); setHasVoted(true); }} size="lg" className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold h-14 rounded-2xl shadow-xl">Show Results</Button>
+                    <Button onClick={() => { setVoteSuccess(false); setHasVoted(true); }} size="lg" className="w-full bg-foreground text-background font-bold h-14 rounded-2xl shadow-xl hover:opacity-90 transition-all">Show Results</Button>
                     {displayPoll.allowMultipleVotes && (
-                      <Button onClick={() => { setVoteSuccess(false); setSelectedOptionId(null); }} variant="outline" size="lg" className="w-full h-14 rounded-2xl font-bold">Vote Again</Button>
+                      <Button onClick={() => { setVoteSuccess(false); setSelectedOptionId(null); }} variant="outline" size="lg" className="w-full h-14 rounded-2xl font-bold border-foreground/20 hover:border-foreground transition-all">Vote Again</Button>
                     )}
                   </div>
                 </motion.div>
@@ -111,7 +116,7 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
             </AnimatePresence>
           </div>
           <div className="lg:col-span-4 p-8 sm:p-12 bg-foreground/[0.02]">
-            <PollSidebar totalVotes={displayPoll.totalVotes} topOption={topOption.voteCount > 0 ? topOption : undefined} createdAtFormatted={createdAtFormatted} creatorName={initialPoll.creator?.name || "Guest"} hideShareButton={displayPoll.hideShareButton} copied={copied} onCopyLink={() => { navigator.clipboard.writeText(window.location.href); setCopied(true); setTimeout(() => setCopied(false), 2000); }} isOwner={isOwner} onOpenSettings={() => setIsSettingsOpen(true)} onDelete={async () => { if (window.confirm("Delete poll?")) { await deletePoll(initialPoll.id); router.push("/dashboard"); } }} />
+            <PollSidebar id={displayPoll.id} totalVotes={displayPoll.totalVotes} topOption={topOption.voteCount > 0 ? topOption : undefined} createdAtFormatted={createdAtFormatted} creatorName={initialPoll.creator?.name || "Guest"} hideShareButton={displayPoll.hideShareButton} copied={copied} onCopyLink={() => { navigator.clipboard.writeText(window.location.href); setCopied(true); setTimeout(() => setCopied(false), 2000); }} isOwner={isOwner} onOpenSettings={() => setIsSettingsOpen(true)} onDelete={async () => { if (window.confirm("Delete poll?")) { await deletePoll(initialPoll.id); router.push("/dashboard"); } }} />
           </div>
         </div>
       </Card>

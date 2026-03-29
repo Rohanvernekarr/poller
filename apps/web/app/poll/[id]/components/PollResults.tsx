@@ -81,7 +81,7 @@ export function PollResults({
                       animate={{ width: `${percent}%` }}
                       transition={{ duration: 1, ease: "easeOut" }}
                       className={`h-full rounded-lg relative overflow-hidden flex items-center shadow-sm ${
-                        isWinner ? "bg-violet-500" : "bg-foreground/20"
+                        isWinner ? "bg-foreground" : "bg-foreground/20"
                       }`}
                     >
                       <div className="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition-opacity" />
