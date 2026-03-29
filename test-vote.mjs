@@ -1,0 +1,1 @@
+fetch('http://localhost:3000/api/vote', { method: 'POST', headers: {'Content-Type': 'application/json', 'x-forwarded-for': Math.random().toString()}, body: JSON.stringify({pollId: 'cmnbdh7g00005106oi9c5e1f9', optionId: 'cmnbdh7g00005106oi9c5e1f9', fingerprintClient: Math.random().toString()}) }).then(r=>r.text()).then(console.log).catch(console.error)
