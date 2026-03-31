@@ -49,55 +49,54 @@ export function PollSidebar({
 }: PollSidebarProps) {
   return (
     <div className="flex flex-col gap-6 lg:sticky lg:top-24">
-      {/* Analytics Card - Now part of the single card layout as a section */}
       <motion.div
         initial={{ opacity: 0, x: 10 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.4 }}
       >
         <div className="space-y-4">
-          <div className="flex items-center gap-2 px-2">
-            <BarChart3 className="w-5 h-5 text-foreground" />
-            <h3 className="text-xl font-bold">Analytics</h3>
+          <div className="flex items-center gap-2 px-1">
+            <BarChart3 className="w-4 h-4 text-foreground/40" />
+            <h3 className="text-sm font-black uppercase tracking-widest italic">Stats</h3>
           </div>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between p-3.5 rounded-xl bg-foreground/5 border border-border">
-              <div className="flex items-center gap-3 text-foreground/70">
-                <Users className="w-4 h-4" />
-                <span className="text-sm font-semibold">Total Votes</span>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between p-3 rounded-xl bg-foreground/[0.02] border border-border/50">
+              <div className="flex items-center gap-2.5 text-foreground/40 italic">
+                <Users className="w-3.5 h-3.5" />
+                <span className="text-[10px] font-black uppercase tracking-widest leading-none pt-0.5">Votes</span>
               </div>
-              <span className="text-xl font-black">
+              <span className="text-lg font-black leading-none italic">
                 {totalVotes.toLocaleString()}
               </span>
             </div>
 
-            <div className="flex items-center justify-between p-3.5 rounded-xl bg-foreground/5 border border-border">
-              <div className="flex items-center gap-3 text-foreground/70">
-                <TrendingUp className="w-4 h-4" />
-                <span className="text-sm font-semibold">Leading</span>
+            <div className="flex items-center justify-between p-3 rounded-xl bg-foreground/[0.02] border border-border/50">
+              <div className="flex items-center gap-2.5 text-foreground/40 italic">
+                <TrendingUp className="w-3.5 h-3.5" />
+                <span className="text-[10px] font-black uppercase tracking-widest leading-none pt-0.5">Top</span>
               </div>
               <span
-                className="text-sm font-bold truncate max-w-[120px] text-right"
+                className="text-[11px] font-black uppercase tracking-tight truncate max-w-[100px] text-right italic"
                 title={topOption?.text || "None"}
               >
                 {topOption ? topOption.text : "None"}
               </span>
             </div>
 
-            <div className="flex items-center justify-between p-3.5 rounded-xl bg-foreground/5 border border-border">
-              <div className="flex items-center gap-3 text-foreground/70">
-                <Clock className="w-4 h-4" />
-                <span className="text-sm font-semibold">Created</span>
+            <div className="flex items-center justify-between p-3 rounded-xl bg-foreground/[0.02] border border-border/50">
+              <div className="flex items-center gap-2.5 text-foreground/40 italic">
+                <Clock className="w-3.5 h-3.5" />
+                <span className="text-[10px] font-black uppercase tracking-widest leading-none pt-0.5">Date</span>
               </div>
-              <span className="text-sm font-bold">{createdAtFormatted}</span>
+              <span className="text-[11px] font-black uppercase tracking-tight italic">{createdAtFormatted}</span>
             </div>
 
-            <div className="flex items-center justify-between p-3.5 rounded-xl bg-foreground/5 border border-border">
-              <div className="flex items-center gap-3 text-foreground/70">
-                <Settings2 className="w-4 h-4" />
-                <span className="text-sm font-semibold">Creator</span>
+            <div className="flex items-center justify-between p-3 rounded-xl bg-foreground/[0.02] border border-border/50">
+              <div className="flex items-center gap-2.5 text-foreground/40 italic">
+                <Globe className="w-3.5 h-3.5" />
+                <span className="text-[10px] font-black uppercase tracking-widest leading-none pt-0.5">Author</span>
               </div>
-              <span className="text-xs font-bold uppercase tracking-widest text-foreground/60">
+              <span className="text-[10px] font-black uppercase tracking-widest text-foreground/30 truncate max-w-[100px] text-right italic">
                 {creatorName}
               </span>
             </div>
@@ -105,39 +104,36 @@ export function PollSidebar({
         </div>
       </motion.div>
 
-      {/* Share Section */}
       {!hideShareButton && (
         <motion.div
           initial={{ opacity: 0, x: 10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="pt-4"
+          className="pt-2"
         >
           <div className="space-y-4">
-            <div className="flex items-center gap-2 px-2">
-              <Share2 className="w-5 h-5 text-foreground" />
-              <h3 className="text-lg font-bold">Share Poll</h3>
+            <div className="flex items-center gap-2 px-1">
+              <Share2 className="w-4 h-4 text-foreground/40" />
+              <h3 className="text-sm font-black uppercase tracking-widest italic">Share</h3>
             </div>
-            <div className="space-y-4 px-2">
-              <div className="flex bg-foreground/5 border border-border rounded-xl overflow-hidden group focus-within:ring-2 focus-within:ring-foreground/50 transition-shadow">
+            <div className="px-1">
+              <div className="flex bg-foreground/[0.02] border border-border rounded-xl overflow-hidden group focus-within:ring-1 focus-within:ring-foreground/20 transition-shadow">
                 <input
                   readOnly
                   value={typeof window !== "undefined" ? window.location.href : ""}
-                  className="flex-1 bg-transparent border-none text-sm font-medium text-foreground px-4 py-3 outline-none truncate"
+                  className="flex-1 bg-transparent border-none text-[11px] font-black uppercase tracking-tight text-foreground px-4 py-2.5 outline-none truncate italic opacity-40 group-focus-within:opacity-100"
                 />
                 <button
                   onClick={onCopyLink}
-                  className={`p-2 flex items-center justify-center transition-colors font-bold text-sm ${
+                  className={`px-4 flex items-center justify-center transition-colors font-black text-[10px] uppercase tracking-widest ${
                     copied
-                      ? "bg-gray-700 text-white"
-                      : "bg-foreground/10 hover:bg-foreground/20 text-foreground"
+                      ? "bg-green-500 text-white"
+                      : "bg-foreground/5 hover:bg-foreground/10 text-foreground/40 hover:text-foreground"
                   }`}
                 >
-                  {copied ? <CheckCircle2 className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  {copied ? <CheckCircle2 className="w-3.5 h-3.5" /> : "Copy"}
                 </button>
               </div>
-
-              
             </div>
           </div>
         </motion.div>
@@ -148,33 +144,33 @@ export function PollSidebar({
           initial={{ opacity: 0, x: 10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
-          className="pt-6 border-t border-border mt-2"
+          className="pt-6 border-t border-border mt-2 space-y-2"
         >
           <Link href={`/poll/${id}/results`} className="block w-full">
             <Button
-              variant="outline"
-              className="w-full h-12 text-sm font-semibold border-foreground/20 hover:border-foreground bg-foreground hover:bg-foreground text-background transition-all flex items-center justify-center gap-2 rounded-xl mb-3"
+              className="w-full h-10 bg-foreground text-background hover:opacity-90 rounded-xl font-black uppercase tracking-widest text-[9px] transition-all shadow-lg shadow-foreground/10 flex items-center justify-center gap-2"
             >
-              <BarChart3 className="w-4 h-4" />
-              Advanced Analytics
+              <BarChart3 className="w-3.5 h-3.5" />
+              Results
             </Button>
           </Link>
           
           <Button
             onClick={onOpenSettings}
             variant="outline"
-            className="w-full h-12 text-sm font-semibold border-foreground/20 hover:border-foreground bg-foreground/5 hover:bg-foreground/10 transition-all flex items-center justify-center gap-2 rounded-xl mb-3"
+            className="w-full h-10 border-border text-foreground/40 hover:text-foreground hover:bg-foreground/5 rounded-xl font-black uppercase tracking-widest text-[9px] flex items-center justify-center gap-2 transition-all"
           >
-            <Settings2 className="w-4 h-4 text-foreground" />
-            Poll Settings
+            <Settings2 className="w-3.5 h-3.5" />
+            Settings
           </Button>
+
           <Button
             onClick={onDelete}
             variant="ghost"
-            className="w-full h-12 text-sm font-semibold text-red-500/60 hover:text-red-500 hover:bg-red-500/5 transition-all flex items-center justify-center gap-2 rounded-xl"
+            className="w-full h-10 text-[9px] font-black uppercase tracking-widest text-red-500/30 hover:text-red-500 hover:bg-red-500/5 transition-all flex items-center justify-center gap-2 rounded-xl"
             isLoading={isDeleting}
           >
-            Delete Poll
+            Delete
           </Button>
         </motion.div>
       )}

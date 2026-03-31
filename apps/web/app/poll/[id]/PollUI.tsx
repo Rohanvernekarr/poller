@@ -73,42 +73,44 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
   const topOption = displayPoll.options.reduce((prev, current) => (prev.voteCount > current.voteCount) ? prev : current);
 
   return (
-    <div className="w-full max-w-7xl mx-auto selection:bg-foreground/20 pb-20 px-6 pt-0">
-      <TechnicalBackButton 
-        href={isOwner ? "/dashboard" : "/"} 
-        text={isOwner ? "Back to Dashboard" : "Back to Home"} 
-      />
-      <Card className="glass border-border shadow-2xl rounded-[2.5rem] overflow-hidden bg-background/50 backdrop-blur-sm">
+    <div className="w-full max-w-7xl mx-auto selection:bg-foreground/20 pb-20 px-0 sm:px-6 pt-0">
+      <div className="px-6 sm:px-0">
+        <TechnicalBackButton 
+          href={isOwner ? "/dashboard" : "/"} 
+          text={isOwner ? "Back to Dashboard" : "Back to Home"} 
+        />
+      </div>
+      <Card className="glass border-border sm:border shadow-2xl rounded-none sm:rounded-[2rem] overflow-hidden bg-background/50 backdrop-blur-sm border-x-0 sm:border-x">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
-          <div className="lg:col-span-8 p-8 sm:p-12 border-b lg:border-b-0 lg:border-r border-border">
-            <div className="mb-12">
-              <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-4">{displayPoll.title}</h1>
-              {displayPoll.description && <p className="text-xl text-foreground/60 font-medium leading-relaxed">{displayPoll.description}</p>}
+          <div className="lg:col-span-8 p-5 sm:p-10 border-b lg:border-b-0 lg:border-r border-border">
+            <div className="mb-8">
+              <h1 className="text-2xl md:text-5xl font-black tracking-tight mb-3 leading-tight uppercase italic">{displayPoll.title}</h1>
+              {displayPoll.description && <p className="text-base md:text-lg text-foreground/60 font-medium leading-relaxed">{displayPoll.description}</p>}
             </div>
             <AnimatePresence mode="wait">
               {voteSuccess ? (
-                <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="py-20 flex flex-col items-center justify-center text-center space-y-8">
-                  <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center border-2 border-green-500/20">
-                    <CheckCircle2 className="w-12 h-12 text-green-500" />
+                <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="py-12 sm:py-20 flex flex-col items-center justify-center text-center space-y-6 sm:space-y-8">
+                  <div className="w-16 h-16 sm:w-24 sm:h-24 bg-green-500/10 rounded-full flex items-center justify-center border-2 border-green-500/20">
+                    <CheckCircle2 className="w-8 h-8 sm:w-12 sm:h-12 text-green-500" />
                   </div>
-                  <div className="space-y-2">
-                    <h2 className="text-3xl font-black">Vote Received!</h2>
-                    <p className="text-lg text-foreground/60 font-medium">Your choice has been recorded successfully.</p>
+                  <div className="space-y-1 sm:space-y-2">
+                    <h2 className="text-xl sm:text-3xl font-black uppercase italic">Vote Received!</h2>
+                    <p className="text-sm sm:text-lg text-foreground/60 font-medium">Your choice has been recorded.</p>
                   </div>
-                  <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm">
-                    <Button onClick={() => { setVoteSuccess(false); setHasVoted(true); }} size="lg" className="w-full bg-foreground text-background font-bold h-14 rounded-2xl shadow-xl hover:opacity-90 transition-all">Show Results</Button>
+                  <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-xs sm:max-w-sm">
+                    <Button onClick={() => { setVoteSuccess(false); setHasVoted(true); }} size="lg" className="w-full bg-foreground text-background font-black uppercase tracking-widest h-12 sm:h-14 rounded-xl sm:rounded-2xl shadow-xl hover:opacity-90 transition-all text-xs sm:text-sm">Show Results</Button>
                     {displayPoll.allowMultipleVotes && (
-                      <Button onClick={() => { setVoteSuccess(false); setSelectedOptionId(null); }} variant="outline" size="lg" className="w-full h-14 rounded-2xl font-bold border-foreground/20 hover:border-foreground transition-all">Vote Again</Button>
+                      <Button onClick={() => { setVoteSuccess(false); setSelectedOptionId(null); }} variant="outline" size="lg" className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl font-black uppercase tracking-widest border-foreground/10 hover:border-foreground transition-all text-xs sm:text-sm">Vote Again</Button>
                     )}
                   </div>
                 </motion.div>
               ) : (!hasVoted && !viewingResults) && !isOwner ? (
                 <PollVoting options={displayPoll.options} selectedOptionId={selectedOptionId} onSelectOption={setSelectedOptionId} onVote={handleVote} onViewResults={() => setViewingResults(true)} isVoting={isVoting} votingError={votingError} requireNames={displayPoll.requireNames} voterName={voterName} setVoterName={setVoterName} customAnswer={customAnswer} setCustomAnswer={setCustomAnswer} />
               ) : (
-                <div className="space-y-8">
+                <div className="space-y-6 sm:space-y-8">
                   <PollResults options={displayPoll.options} totalVotes={displayPoll.totalVotes} resultsVisibility={displayPoll.resultsVisibility} isOwner={isOwner} allowMultipleVotes={displayPoll.allowMultipleVotes} actualVoteCast={hasVoted && !viewingResults} />
                   {!hasVoted && viewingResults && (
-                    <Button onClick={() => setViewingResults(false)} variant="ghost" className="font-bold text-violet-500 hover:text-violet-600 hover:bg-violet-500/5">
+                    <Button onClick={() => setViewingResults(false)} variant="ghost" className="font-black uppercase tracking-widest text-[10px] text-foreground/40 hover:text-foreground">
                       ← Back to Voting
                     </Button>
                   )}
@@ -116,7 +118,7 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
               )}
             </AnimatePresence>
           </div>
-          <div className="lg:col-span-4 p-8 sm:p-12 bg-foreground/[0.02]">
+          <div className="lg:col-span-4 p-5 sm:p-10 bg-foreground/[0.01]">
             <PollSidebar 
               id={displayPoll.id} 
               totalVotes={displayPoll.totalVotes} 
