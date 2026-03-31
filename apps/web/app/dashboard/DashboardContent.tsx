@@ -49,7 +49,7 @@ export function DashboardContent({ polls }: { polls: any[] }) {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {polls.map((poll) => (
             <motion.div 
                key={poll.id}
@@ -70,20 +70,22 @@ function PollCard({ poll, isDeleting, onDelete }: { poll: any; isDeleting: boole
   const totalVotes = poll._count.votes;
 
   return (
-    <div className="group relative bg-background/50 border border-border rounded-[2.5rem] p-10 space-y-10 hover:bg-foreground/[0.03] transition-all duration-500 overflow-hidden h-full flex flex-col justify-between backdrop-blur-sm">
-      <div className="absolute -top-32 -right-32 w-64 h-64 bg-foreground/[0.03] blur-[120px] group-hover:bg-foreground/[0.06] transition-colors" />
+    <div className="group relative bg-background/50 border border-border rounded-3xl p-6 space-y-6 hover:bg-foreground/[0.02] transition-all duration-500 overflow-hidden h-full flex flex-col justify-between backdrop-blur-sm">
+      <div className="absolute -top-32 -right-32 w-64 h-64 bg-foreground/[0.02] blur-[120px] group-hover:bg-foreground/[0.04] transition-colors" />
 
-      <div className="space-y-10 relative">
-        <div className="flex items-start justify-between gap-6 relative">
-          <div className="space-y-4">
-            <h2 className="text-3xl font-black uppercase tracking-tight group-hover:text-foreground transition-colors leading-none italic">{poll.title}</h2>
-            <div className="flex items-center gap-6 text-[10px] font-black text-foreground/30 uppercase tracking-widest">
-              <span className="flex items-center gap-2">
-                <Users className="w-3.5 h-3.5" />
+      <div className="space-y-6 relative">
+        <div className="flex items-start justify-between gap-4 relative">
+          <div className="space-y-2 min-w-0 flex-1">
+            <h2 className="text-lg font-black uppercase tracking-tight group-hover:text-foreground transition-colors leading-tight italic truncate" title={poll.title}>
+              {poll.title}
+            </h2>
+            <div className="flex items-center gap-4 text-[9px] font-black text-foreground/25 uppercase tracking-widest">
+              <span className="flex items-center gap-1.5">
+                <Users className="w-3 h-3" />
                 {totalVotes} {totalVotes === 1 ? 'Vote' : 'Votes'}
               </span>
-              <span className="flex items-center gap-2">
-                <Clock className="w-3.5 h-3.5" />
+              <span className="flex items-center gap-1.5">
+                <Clock className="w-3 h-3" />
                 {new Date(poll.createdAt).toLocaleDateString()}
               </span>
             </div>
@@ -94,24 +96,24 @@ function PollCard({ poll, isDeleting, onDelete }: { poll: any; isDeleting: boole
             size="sm"
             onClick={onDelete}
             isLoading={isDeleting}
-            className="p-4 h-12 w-12 text-foreground/20 hover:text-red-500 hover:bg-red-500/10 rounded-2xl transition-all"
+            className="p-3 h-9 w-9 text-foreground/15 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all flex-shrink-0"
             title="Delete Poll"
           >
-            {!isDeleting && <Trash2 className="w-5 h-5" />}
+            {!isDeleting && <Trash2 className="w-4 h-4" />}
           </Button>
         </div>
 
         {/* Mini Bar Chart */}
-        <div className="space-y-6 relative">
-          {poll.options.map((option: any) => {
+        <div className="space-y-4 relative">
+          {poll.options.slice(0, 4).map((option: any) => { 
             const percentage = totalVotes === 0 ? 0 : (option._count.votes / totalVotes) * 100;
             return (
-              <div key={option.id} className="space-y-2">
-                <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-foreground/40">
+              <div key={option.id} className="space-y-1.5">
+                <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-foreground/40">
                   <span className="truncate max-w-[80%]">{option.text}</span>
                   <span>{Math.round(percentage)}%</span>
                 </div>
-                <div className="h-2 bg-foreground/5 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-foreground/5 rounded-full overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${percentage}%` }}
@@ -121,19 +123,24 @@ function PollCard({ poll, isDeleting, onDelete }: { poll: any; isDeleting: boole
               </div>
             );
           })}
+          {poll.options.length > 4 && (
+            <div className="text-[8px] font-black uppercase tracking-widest text-foreground/20 text-center italic">
+              + {poll.options.length - 4} more options
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="pt-10 flex items-center gap-4 relative">
+      <div className="pt-6 flex items-center gap-3 relative">
         <Link href={`/poll/${poll.id}`} className="flex-1">
-          <Button variant="outline" className="w-full h-12 border-border text-foreground/40 hover:text-foreground hover:bg-foreground/5 rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-all">
-            Open Poll
-            <ArrowRight className="w-4 h-4" />
+          <Button variant="outline" className="w-full h-10 border-border text-foreground/40 hover:text-foreground hover:bg-foreground/5 rounded-xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-all">
+            View
+            <ArrowRight className="w-3 h-3" />
           </Button>
         </Link>
         <Link href={`/poll/${poll.id}/results`} className="flex-1">
-          <Button className="w-full h-12 bg-foreground text-background hover:opacity-90 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all shadow-xl shadow-foreground/20">
-            Analytics
+          <Button className="w-full h-10 bg-foreground text-background hover:opacity-90 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all shadow-lg shadow-foreground/10">
+            Result
           </Button>
         </Link>
       </div>
