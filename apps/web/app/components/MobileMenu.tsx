@@ -24,7 +24,7 @@ export function MobileMenu({ isOpen, setIsOpen, session, pathname, isHome, onSig
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
-            className="md:hidden fixed inset-0 bg-background/80 backdrop-blur-sm z-[-1]"
+            className="md:hidden fixed inset-0 bg-background/80 backdrop-blur-sm z-30"
           />
           
           <motion.div
@@ -32,7 +32,7 @@ export function MobileMenu({ isOpen, setIsOpen, session, pathname, isHome, onSig
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden absolute top-full left-0 w-full border-b border-border bg-background p-6 shadow-2xl"
+            className="md:hidden fixed top-14 left-0 w-full border-b border-border bg-background p-6 shadow-2xl z-40"
           >
             <div className="flex flex-col gap-8">
               {session ? (
