@@ -7,36 +7,25 @@ import { authOptions } from "../../api/auth/[...nextauth]/route";
 
 export default async function PollPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const session = await getServerSession(authOptions);
-
-  const poll = await prisma.poll.findUnique({
-    where: { id },
-    include: {
-      creator: {
-        select: {
-          name: true,
-          email: true,
-        }
-      },
-      options: {
-        include: {
-          _count: {
-            select: { votes: true }
-          }
-        }
-      },
-      _count: {
-        select: { votes: true }
+  
+  const [session, poll, cookieStore] = await Promise.all([
+    getServerSession(authOptions),
+    prisma.poll.findUnique({
+      where: { id },
+      include: {
+        creator: { select: { name: true, email: true } },
+        options: { include: { _count: { select: { votes: true } } } },
+        _count: { select: { votes: true } }
       }
-    }
-  });
+    }),
+    cookies()
+  ]);
 
   if (!poll) {
     notFound();
   }
 
   const isOwner = session?.user?.id === poll.creatorId;
-  const cookieStore = await cookies();
   const hasVoted = cookieStore.get(`voted_${poll.id}`)?.value === "true";
 
   return (
@@ -47,7 +36,7 @@ export default async function PollPage({ params }: { params: Promise<{ id: strin
           id: poll.id,
           title: poll.title,
           description: poll.description,
-          creator: poll.creator,
+          creator: poll.creator || undefined,
           createdAt: poll.createdAt,
           options: poll.options.map((opt: any) => ({ ...opt, voteCount: opt._count.votes })),
           totalVotes: poll._count.votes,
