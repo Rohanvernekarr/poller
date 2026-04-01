@@ -14,11 +14,16 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  role          String    @default("ADMIN")
+  role          String    @default("USER")
+  isBlocked     Boolean   @default(false)
+  
   accounts      Account[]
   sessions      Session[]
   polls         Poll[]
   comments      Comment[]
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now()) @updatedAt
 }
 
 model Account {
