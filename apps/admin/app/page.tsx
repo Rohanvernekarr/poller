@@ -11,20 +11,33 @@ export default async function AdminDashboard() {
     redirect("/login");
   }
 
-  const polls = await prisma.poll.findMany({
-    orderBy: { createdAt: "desc" },
-    include: {
-      _count: {
-        select: { votes: true }
-      },
-      votes: {
-        select: { id: true, ipAddress: true }
+  const [polls, users, totalAccounts, totalSessions] = await Promise.all([
+    prisma.poll.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        _count: {
+          select: { votes: true }
+        },
+        votes: {
+          select: { id: true, ipAddress: true }
+        }
       }
-    }
-  });
+    }),
+    prisma.user.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        _count: {
+          select: { polls: true }
+        }
+      }
+    }),
+    prisma.account.count(),
+    prisma.session.count(),
+  ]);
 
   const totalPolls = polls.length;
   const totalVotes = polls.reduce((acc: number, poll: any) => acc + poll._count.votes, 0);
+  const totalUsers = users.length;
 
   const enrichedPolls = polls.map((poll: any) => {
     const uniqueIps = new Set(poll.votes.map((v: any) => v.ipAddress)).size;
@@ -60,8 +73,12 @@ export default async function AdminDashboard() {
 
         <DashboardClient 
           initialPolls={enrichedPolls} 
+          initialUsers={users}
           totalVotes={totalVotes} 
-          totalPolls={totalPolls} 
+          totalPolls={totalPolls}
+          totalUsers={totalUsers}
+          totalAccounts={totalAccounts}
+          totalSessions={totalSessions}
         />
       </div>
     </div>
