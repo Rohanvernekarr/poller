@@ -100,7 +100,7 @@ export function EditUserModal({ isOpen, onClose, user, onSave }: EditUserModalPr
           <Button onClick={onClose} variant="ghost" className="flex-1 bg-white/5 hover:bg-white/10 text-white border border-white/10">
             Cancel
           </Button>
-          <Button onClick={handleSave} disabled={loading} className="flex-1 bg-primary hover:bg-primary/90 text-white">
+          <Button onClick={handleSave} disabled={loading} className="flex-1 bg-primary hover:bg-primary/90 text-black">
             {loading ? "Saving..." : "Save Changes"}
           </Button>
         </div>

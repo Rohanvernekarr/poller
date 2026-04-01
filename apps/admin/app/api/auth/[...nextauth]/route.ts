@@ -10,11 +10,29 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
+        const adminEmail = process.env.ADMIN_EMAIL || "admin@poller.com";
+        const adminPassword = process.env.ADMIN_PASSWORD || "supersecret";
+
         if (
-          credentials?.username === "admin@poller.com" &&
-          credentials?.password === "supersecret"
+          credentials?.username === adminEmail &&
+          credentials?.password === adminPassword
         ) {
-          return { id: "1", name: "Admin", email: "admin@poller.com", role: "ADMIN" };
+          const { prisma } = await import("@repo/db");
+          const dbUser = await prisma.user.findUnique({
+            where: { email: adminEmail }
+          });
+
+          if (dbUser && dbUser.role === "ADMIN") {
+            if (dbUser.isBlocked) return null;
+            return { 
+              id: dbUser.id, 
+              name: dbUser.name || "Admin", 
+              email: dbUser.email, 
+              role: dbUser.role 
+            };
+          }
+
+          return { id: "admin-static", name: "Admin (Static)", email: adminEmail, role: "ADMIN" };
         }
         return null;
       }
