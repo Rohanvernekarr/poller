@@ -58,6 +58,17 @@ export const authOptions: NextAuthOptions = {
     verifyRequest: "/verify",
   },
   callbacks: {
+    async signIn({ user }) {
+      if (!user.id) return true;
+      const dbUser = await prisma.user.findUnique({
+        where: { id: user.id },
+        select: { isBlocked: true }
+      });
+      if (dbUser?.isBlocked) {
+        return false; // Deny sign-in
+      }
+      return true;
+    },
     async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
