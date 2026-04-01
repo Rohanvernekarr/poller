@@ -75,7 +75,7 @@ export function PollsManager({ initialPolls }: PollsManagerProps) {
           <TableBody>
             {filteredPolls.map((poll) => (
               <TableRow key={poll.id} className="border-white/5 hover:bg-white/[0.02] transition-colors">
-                <TableCell className="font-bold text-white max-w-[300px] truncate px-1">
+                <TableCell className="font-bold text-white max-w-[300px] truncate px-4">
                   {poll.title}
                 </TableCell>
                 <TableCell className="text-gray-500 font-medium whitespace-nowrap">
