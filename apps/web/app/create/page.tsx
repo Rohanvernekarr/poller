@@ -11,11 +11,11 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { AlertCircle } from "lucide-react";
 import { TechnicalBackButton } from "../components/TechnicalBackButton";
+import { useFormStatus } from "react-dom";
 
 export default function CreatePoll() {
   const { data: session } = useSession();
   const [options, setOptions] = useState([{ id: 1, text: "" }, { id: 2, text: "" }]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const handleAddOption = () => {
@@ -67,7 +67,6 @@ export default function CreatePoll() {
           <CardContent>
             <form 
               action={async (formData) => {
-                setIsSubmitting(true);
                 try {
                   await createPoll(formData);
                 } catch (e) {
@@ -75,7 +74,6 @@ export default function CreatePoll() {
                     throw e;
                   }
                   alert(e instanceof Error ? e.message : "Error creating poll");
-                  setIsSubmitting(false);
                 }
               }} 
               className="space-y-6"
@@ -198,21 +196,33 @@ export default function CreatePoll() {
                 </AnimatePresence>
               </div>
 
-              <Button 
-                type="submit" 
-                size="lg" 
-                className="w-full mt-8 h-16 bg-foreground text-background hover:opacity-90 rounded-2xl font-black uppercase tracking-widest text-lg shadow-2xl shadow-foreground/20"
-                isLoading={isSubmitting}
-              >
-                {isSubmitting ? "Creating your Poll..." : (
-                  <>Create your Poll <ArrowRight className="w-5 h-5 ml-4" /></>
-                )}
-              </Button>
+              <SubmitButton />
             </form>
           </CardContent>
         </Card>
       </motion.div>
     </div>
+  );
+}
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  
+  return (
+    <Button 
+      type="submit" 
+      size="lg" 
+      className="w-full mt-8 h-14 bg-foreground text-background hover:opacity-90 rounded-[2rem] font-black uppercase tracking-widest text-lg shadow-2xl shadow-foreground/20 transition-all active:scale-[0.98]"
+      isLoading={pending}
+      disabled={pending}
+    >
+      {pending ? "Creating..." : (
+        <span className="flex items-center gap-4">
+          Create your Poll
+          <ArrowRight className="w-5 h-5 ml-4" />
+        </span>
+      )}
+    </Button>
   );
 }
 
