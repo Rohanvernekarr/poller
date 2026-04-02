@@ -76,6 +76,7 @@ model Poll {
   hideShareButton    Boolean      @default(false)
   anonymizeData      Boolean      @default(false)
   resultsVisibility  String       @default("PUBLIC") // PUBLIC, HIDDEN, ADMIN_ONLY
+  allowedDomains     String?
 
   createdAt          DateTime     @default(now())
   

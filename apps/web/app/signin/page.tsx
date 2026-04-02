@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
 import { Button } from "@repo/ui/button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Mail } from "lucide-react";
 
-export default function SignInPage() {
+function SignInForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -18,8 +21,8 @@ export default function SignInPage() {
 
     setIsLoading(true);
     try {
-      await signIn("email", { email, redirect: false, callbackUrl: "/" });
-      router.push(`/verify?email=${encodeURIComponent(email)}`);
+      await signIn("email", { email, redirect: false, callbackUrl });
+      router.push(`/verify?email=${encodeURIComponent(email)}&callbackUrl=${encodeURIComponent(callbackUrl)}`);
     } catch (error) {
       console.error(error);
     } finally {
@@ -28,7 +31,7 @@ export default function SignInPage() {
   };
 
   const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/" });
+    signIn("google", { callbackUrl });
   };
 
   return (
@@ -97,5 +100,13 @@ export default function SignInPage() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-black" />}>
+      <SignInForm />
+    </Suspense>
   );
 }

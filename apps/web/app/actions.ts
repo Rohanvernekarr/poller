@@ -19,6 +19,7 @@ export async function createPoll(formData: FormData) {
   const hideShareButton = formData.get("hideShareButton") === "true";
   const anonymizeData = formData.get("anonymizeData") === "true";
   const resultsVisibility = (formData.get("resultsVisibility") || "PUBLIC") as string;
+  const allowedDomains = formData.get("allowedDomains") as string | null;
 
   // Extract all options
   const options: string[] = [];
@@ -47,6 +48,7 @@ export async function createPoll(formData: FormData) {
       hideShareButton,
       anonymizeData,
       resultsVisibility,
+      allowedDomains: allowedDomains?.trim() || null,
       creatorId: userId,
       options: {
         create: options.map((opt) => ({
@@ -92,6 +94,7 @@ export async function updatePollSettings(pollId: string, data: {
   allowMultipleVotes?: boolean;
   hideShareButton?: boolean;
   anonymizeData?: boolean;
+  allowedDomains?: string | null;
 }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) throw new Error("Unauthorized");

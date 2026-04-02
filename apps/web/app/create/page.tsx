@@ -179,6 +179,15 @@ export default function CreatePoll() {
                         <SettingToggle name="hideShareButton" title="Stealth Mode" desc="Hide share icons from participants" />
                         <SettingToggle name="anonymizeData" title="Anonymize IP" desc="Fully encrypt participant footprints" />
 
+                        <div className="pt-6 border-t border-border space-y-4">
+                          <label className="text-[10px] font-black uppercase tracking-widest text-foreground/40 block ml-1">Allowed Domains (Optional)</label>
+                          <Input 
+                            name="allowedDomains" 
+                            placeholder="e.g. @acharya.ac.in, @example.com"
+                            className="h-14 rounded-2xl bg-foreground/[0.02] border-border focus:ring-foreground/20"
+                          />
+                          <p className="text-[10px] font-bold text-foreground/40 italic ml-1">Leave empty to allow anyone. Separate multiple domains with commas.</p>
+                        </div>
                         <div className="pt-6 border-t border-border">
                           <label className="text-[10px] font-black uppercase tracking-widest text-foreground/40 block mb-4 ml-1">Results Visibility</label>
                           <select 

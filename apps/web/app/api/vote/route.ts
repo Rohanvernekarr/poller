@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@repo/db";
 import { generateServerFingerprint } from "@repo/utils";
 import { cookies } from "next/headers";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,6 +19,25 @@ export async function POST(req: NextRequest) {
 
     if (!poll) {
       return NextResponse.json({ error: "Poll not found" }, { status: 404 });
+    }
+
+    if (poll.allowedDomains) {
+      const session = await getServerSession(authOptions);
+      if (!session?.user?.email) {
+        return NextResponse.json({ error: "You must be signed in to vote on this restricted poll" }, { status: 401 });
+      }
+      
+      const userDomain = session.user.email.split("@")[1]?.toLowerCase();
+      const allowedList = poll.allowedDomains.toLowerCase().split(",").map((d: string) => d.trim());
+      
+      const isAllowed = allowedList.some((domain: string) => {
+        const cleanDomain = domain.startsWith("@") ? domain.substring(1) : domain;
+        return userDomain === cleanDomain;
+      });
+
+      if (!isAllowed) {
+        return NextResponse.json({ error: "Your email domain is not authorized to vote on this poll" }, { status: 403 });
+      }
     }
 
     if (poll.requireNames && (!voterName || voterName.trim() === "")) {
@@ -127,5 +148,6 @@ export async function GET(req: NextRequest) {
     hideShareButton: poll.hideShareButton,
     anonymizeData: poll.anonymizeData,
     resultsVisibility: poll.resultsVisibility,
+    allowedDomains: poll.allowedDomains,
   });
 }

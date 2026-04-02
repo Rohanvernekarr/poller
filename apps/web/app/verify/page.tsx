@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -8,10 +8,12 @@ import { Button } from "@repo/ui/button";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-export default function VerifyPage() {
+function VerifyContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams.get("email");
+  const callbackUrlParam = searchParams.get("callbackUrl") || "/";
+  
   const [token, setToken] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,8 +32,7 @@ export default function VerifyPage() {
     setIsLoading(true);
     setError(null);
     try {
-      const callbackUrl = encodeURIComponent("/");
-      const verifyUrl = `/api/auth/callback/email?email=${encodeURIComponent(email as string)}&token=${token}&callbackUrl=${callbackUrl}`;
+      const verifyUrl = `/api/auth/callback/email?email=${encodeURIComponent(email as string)}&token=${token}&callbackUrl=${encodeURIComponent(callbackUrlParam)}`;
       window.location.href = verifyUrl;
       setSuccess(true);
     } catch (err: any) {
@@ -100,5 +101,13 @@ export default function VerifyPage() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+export default function VerifyPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-black" />}>
+      <VerifyContent />
+    </Suspense>
   );
 }
