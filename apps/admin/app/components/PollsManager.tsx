@@ -6,6 +6,7 @@ import { Button } from "@repo/ui/button";
 import { Trash2, AlertTriangle, Search, Filter } from "lucide-react";
 import { format } from "date-fns";
 import { Input } from "@repo/ui/input";
+import { DeletePollModal } from "./DeletePollModal";
 
 interface PollsManagerProps {
   initialPolls: any[];
@@ -15,6 +16,9 @@ export function PollsManager({ initialPolls }: PollsManagerProps) {
   const [polls, setPolls] = useState(initialPolls);
   const [search, setSearch] = useState("");
   const [suspiciousOnly, setSuspiciousOnly] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [pollToDelete, setPollToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const filteredPolls = polls.filter(p => {
     const matchesSearch = p.title.toLowerCase().includes(search.toLowerCase());
@@ -22,17 +26,27 @@ export function PollsManager({ initialPolls }: PollsManagerProps) {
     return matchesSearch && (!suspiciousOnly || isSuspicious);
   });
 
-  const handleDeletePoll = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this poll? All votes and comments will be lost.")) return;
+  const handleDeletePoll = (id: string) => {
+    setPollToDelete(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!pollToDelete) return;
+    setIsDeleting(true);
     try {
-      const res = await fetch(`/api/polls/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/polls/${pollToDelete}`, { method: "DELETE" });
       if (res.ok) {
-        setPolls(polls.filter((p: any) => p.id !== id));
+        setPolls(polls.filter((p: any) => p.id !== pollToDelete));
+        setIsDeleteModalOpen(false);
+        setPollToDelete(null);
       } else {
         alert("Failed to delete poll");
       }
     } catch (e) {
       alert("Error deleting poll");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -120,6 +134,15 @@ export function PollsManager({ initialPolls }: PollsManagerProps) {
           </TableBody>
         </Table>
       </div>
+      <DeletePollModal 
+        isOpen={isDeleteModalOpen} 
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setPollToDelete(null);
+        }} 
+        onConfirm={confirmDelete}
+        isDeleting={isDeleting}
+      />
     </div>
   );
 }

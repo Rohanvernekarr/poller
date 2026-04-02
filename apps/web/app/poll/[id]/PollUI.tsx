@@ -15,6 +15,7 @@ import { PollResults } from "./components/PollResults";
 import { PollSidebar } from "./components/PollSidebar";
 import { PollSettingsModal } from "./components/PollSettingsModal";
 import { TechnicalBackButton } from "../../components/TechnicalBackButton";
+import { DeletePollModal } from "../../components/DeletePollModal";
 
 interface PollOption { id: string; pollId: string; text: string; voteCount: number; }
 interface Poll {
@@ -37,6 +38,7 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [voteSuccess, setVoteSuccess] = useState(false);
   const [viewingResults, setViewingResults] = useState(false);
 
@@ -131,24 +133,28 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
               isOwner={isOwner} 
               onOpenSettings={() => setIsSettingsOpen(true)} 
               isDeleting={isDeleting}
-              onDelete={async () => { 
-                if (window.confirm("Delete poll?")) { 
-                  setIsDeleting(true);
-                  try {
-                    await deletePoll(initialPoll.id); 
-                    router.push("/dashboard"); 
-                  } catch (e) {
-                    setIsDeleting(false);
-                    alert("Failed to delete poll");
-                  }
-                } 
-              }} 
+              onDelete={() => setIsDeleteModalOpen(true)} 
             />
           </div>
         </div>
       </Card>
       {displayPoll.allowComments && <div className="mt-12"><CommentsSection pollId={displayPoll.id} /></div>}
       <PollSettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} settings={displayPoll} onUpdate={handleUpdateSetting} isUpdating={isUpdating} />
+      <DeletePollModal 
+        isOpen={isDeleteModalOpen} 
+        onClose={() => setIsDeleteModalOpen(false)} 
+        isDeleting={isDeleting}
+        onConfirm={async () => {
+          setIsDeleting(true);
+          try {
+            await deletePoll(initialPoll.id); 
+            router.push("/dashboard"); 
+          } catch (e) {
+            setIsDeleting(false);
+            alert("Failed to delete poll");
+          }
+        }}
+      />
     </div>
   );
 }

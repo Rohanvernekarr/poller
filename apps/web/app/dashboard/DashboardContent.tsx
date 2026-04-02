@@ -6,19 +6,28 @@ import { Button } from "@repo/ui/button";
 import { BarChart3, Users, Clock, Trash2, ArrowRight, Plus } from "lucide-react";
 import Link from "next/link";
 import { deletePoll } from "../actions";
+import { DeletePollModal } from "../components/DeletePollModal";
 
 export function DashboardContent({ polls }: { polls: any[] }) {
   const [deletingPollId, setDeletingPollId] = useState<string | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [pollToDelete, setPollToDelete] = useState<string | null>(null);
 
-  const handleDelete = async (pollId: string) => {
-    if (window.confirm("Are you sure you want to delete this poll?")) {
-      setDeletingPollId(pollId);
-      try {
-        await deletePoll(pollId);
-      } catch (e) {
-        setDeletingPollId(null);
-        alert("Failed to delete poll");
-      }
+  const handleDelete = (pollId: string) => {
+    setPollToDelete(pollId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!pollToDelete) return;
+    setDeletingPollId(pollToDelete);
+    try {
+      await deletePoll(pollToDelete);
+      setIsDeleteModalOpen(false);
+      setPollToDelete(null);
+    } catch (e) {
+      setDeletingPollId(null);
+      alert("Failed to delete poll");
     }
   };
 
@@ -62,6 +71,15 @@ export function DashboardContent({ polls }: { polls: any[] }) {
           ))}
         </div>
       )}
+      <DeletePollModal 
+        isOpen={isDeleteModalOpen} 
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setPollToDelete(null);
+        }} 
+        isDeleting={!!deletingPollId}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 }
