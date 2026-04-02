@@ -97,7 +97,7 @@ function PollCard({ poll, isDeleting, onDelete }: { poll: any; isDeleting: boole
             <h2 className="text-lg font-black uppercase tracking-tight group-hover:text-foreground transition-colors leading-tight italic truncate" title={poll.title}>
               {poll.title}
             </h2>
-            <div className="flex items-center gap-4 text-[9px] font-black text-foreground/25 uppercase tracking-widest">
+            <div className="flex items-center gap-4 text-[9px] font-black text-foreground/90 uppercase tracking-widest">
               <span className="flex items-center gap-1.5">
                 <Users className="w-3 h-3" />
                 {totalVotes} {totalVotes === 1 ? 'Vote' : 'Votes'}
@@ -114,20 +114,19 @@ function PollCard({ poll, isDeleting, onDelete }: { poll: any; isDeleting: boole
             size="sm"
             onClick={onDelete}
             isLoading={isDeleting}
-            className="p-3 h-9 w-9 text-foreground/15 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all flex-shrink-0"
+            className="p-3 h-9 w-9 text-red-300 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all flex-shrink-0"
             title="Delete Poll"
           >
             {!isDeleting && <Trash2 className="w-4 h-4" />}
           </Button>
         </div>
 
-        {/* Mini Bar Chart */}
         <div className="space-y-4 relative">
           {poll.options.slice(0, 4).map((option: any) => { 
             const percentage = totalVotes === 0 ? 0 : (option._count.votes / totalVotes) * 100;
             return (
               <div key={option.id} className="space-y-1.5">
-                <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-foreground/40">
+                <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-foreground/60">
                   <span className="truncate max-w-[80%]">{option.text}</span>
                   <span>{Math.round(percentage)}%</span>
                 </div>
@@ -142,7 +141,7 @@ function PollCard({ poll, isDeleting, onDelete }: { poll: any; isDeleting: boole
             );
           })}
           {poll.options.length > 4 && (
-            <div className="text-[8px] font-black uppercase tracking-widest text-foreground/20 text-center italic">
+            <div className="text-[8px] font-black uppercase tracking-widest text-foreground/30 text-center italic">
               + {poll.options.length - 4} more options
             </div>
           )}
@@ -151,7 +150,7 @@ function PollCard({ poll, isDeleting, onDelete }: { poll: any; isDeleting: boole
 
       <div className="pt-6 flex items-center gap-3 relative">
         <Link href={`/poll/${poll.id}`} className="flex-1">
-          <Button variant="outline" className="w-full h-10 border-border text-foreground/40 hover:text-foreground hover:bg-foreground/5 rounded-xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-all">
+          <Button variant="outline" className="w-full h-10 border-border text-foreground/60 hover:text-foreground hover:bg-foreground/5 rounded-xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-all">
             View
             <ArrowRight className="w-3 h-3" />
           </Button>
