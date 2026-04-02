@@ -13,6 +13,7 @@ interface PollSettingsModalProps {
     allowMultipleVotes?: boolean;
     hideShareButton?: boolean;
     anonymizeData?: boolean;
+    allowedDomains?: string | null;
   };
   onUpdate: (setting: string, value: any) => void;
   isUpdating: boolean;
@@ -121,6 +122,33 @@ export function PollSettingsModal({
                   </div>
                 </div>
               </div>
+
+              {/* Domain Restriction Info */}
+              {settings.allowedDomains && (
+                <div className="pt-6 border-t border-border space-y-4">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-2xl bg-foreground/5 flex items-center justify-center flex-shrink-0 text-foreground">
+                      <Lock className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 space-y-2">
+                      <h4 className="font-bold text-foreground leading-tight flex items-center gap-2">
+                        Domain Restriction
+                        <span className="px-2 py-0.5 rounded-full bg-green-500/10 text-green-500 text-[9px] font-black uppercase tracking-widest border border-green-500/20">Active</span>
+                      </h4>
+                      <p className="text-xs font-medium text-foreground/60 leading-relaxed">
+                        Only participants signed in with email addresses from the following domains can access and vote on this poll.
+                      </p>
+                      <div className="flex flex-wrap gap-2 pt-2">
+                        {settings.allowedDomains.split(',').map((domain, i) => (
+                          <span key={i} className="px-2.5 py-1 rounded-lg bg-foreground/5 text-foreground text-xs font-bold font-mono border border-border">
+                            {domain.trim().startsWith('@') ? domain.trim() : `@${domain.trim()}`}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="p-6 bg-foreground/5 flex justify-end">
