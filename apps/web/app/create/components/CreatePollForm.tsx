@@ -266,7 +266,7 @@ export function CreatePollForm() {
                              placeholder="e.g. @company.com, @university.edu"
                              className="h-14 rounded-2xl bg-foreground/[0.02] border-border focus:ring-foreground/20"
                            />
-                           <p className="text-[10px] font-bold text-foreground/40 italic ml-1">Leave empty to allow anyone. Separate multiple domains with commas.</p>
+                           <p className="text-[12px] font-bold text-foreground/40 italic ml-1">Leave empty to allow anyone. Separate multiple domains with commas.</p>
                          </div>
 
                          <div className="pt-6 border-t border-border">
@@ -329,8 +329,8 @@ function SettingToggle({ name, title, desc, checked, disabled, onChange }: { nam
         className="w-6 h-6 rounded-lg border-foreground/20 bg-foreground/5 text-foreground focus:ring-foreground accent-foreground" 
       />
       <div className="flex flex-col gap-1">
-        <span className="text-[11px] font-black uppercase tracking-widest text-foreground group-hover:opacity-100 opacity-60 transition-opacity italic">{title}</span>
-        <span className="text-[11px] font-black uppercase tracking-tight text-foreground/40 italic">{desc}</span>
+        <span className="text-[12px] font-black uppercase tracking-widest text-foreground group-hover:opacity-100 opacity-60 transition-opacity italic">{title}</span>
+        <span className="text-[11px] font-black uppercase tracking-tight text-foreground/60 italic">{desc}</span>
       </div>
     </label>
   );

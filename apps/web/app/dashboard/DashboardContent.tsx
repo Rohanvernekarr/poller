@@ -39,7 +39,7 @@ export function DashboardContent({ polls, userVotes = [] }: { polls: any[], user
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-4">
-          <h1 className="text-6xl font-black uppercase tracking-tight leading-none italic">Dashboard</h1>
+          <h1 className="text-5xl font-black uppercase tracking-tight leading-none italic">Dashboard</h1>
           <p className="text-foreground/40 font-black uppercase tracking-widest text-xs">Manage your active polls and track real-time results.</p>
         </div>
         <Link href="/create">
