@@ -21,6 +21,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Poll not found" }, { status: 404 });
     }
 
+    if (poll.expiresAt && new Date() > new Date(poll.expiresAt)) {
+      return NextResponse.json({ error: "This poll has ended and is no longer accepting votes." }, { status: 403 });
+    }
+
     const session = await getServerSession(authOptions);
     const userId = session?.user?.id || null;
 
@@ -153,5 +157,6 @@ export async function GET(req: NextRequest) {
     anonymizeData: poll.anonymizeData,
     resultsVisibility: poll.resultsVisibility,
     allowedDomains: poll.allowedDomains,
+    expiresAt: poll.expiresAt,
   });
 }

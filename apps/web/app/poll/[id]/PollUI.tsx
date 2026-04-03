@@ -25,6 +25,7 @@ interface Poll {
   createdAt: Date; options: PollOption[]; totalVotes: number; allowMultipleVotes: boolean; 
   requireNames?: boolean; hasOtherOption?: boolean; allowComments?: boolean; hideShareButton?: boolean;
   anonymizeData?: boolean; resultsVisibility?: string; allowedDomains?: string | null;
+  expiresAt?: Date | string | null;
 }
 
 export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll: Poll, hasVotedInitial: boolean, isOwner: boolean }) {
@@ -54,6 +55,7 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
 
   const displayPoll = pollData || initialPoll;
   const createdAtFormatted = initialPoll.createdAt ? new Date(initialPoll.createdAt).toLocaleDateString() : "recently";
+  const isExpired = !!displayPoll.expiresAt && new Date() > new Date(displayPoll.expiresAt);
 
   const handleUpdateSetting = async (setting: string, value: any) => {
     setIsUpdating(true);
@@ -110,9 +112,17 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
       <Card className="glass border-border sm:border shadow-2xl rounded-none sm:rounded-[2rem] overflow-hidden bg-background/50 backdrop-blur-sm border-x-0 sm:border-x">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
           <div className="lg:col-span-8 p-5 sm:p-10 border-b lg:border-b-0 lg:border-r border-border">
-            <div className="mb-8">
-              <h1 className="text-2xl md:text-5xl font-black tracking-tight mb-3 leading-tight uppercase italic">{displayPoll.title}</h1>
-              {displayPoll.description && <p className="text-base md:text-lg text-foreground/60 font-medium leading-relaxed">{displayPoll.description}</p>}
+            <div className="mb-8 flex justify-between items-start">
+              <div>
+                <h1 className="text-2xl md:text-5xl font-black tracking-tight mb-3 leading-tight uppercase italic">{displayPoll.title}</h1>
+                {displayPoll.description && <p className="text-base md:text-lg text-foreground/60 font-medium leading-relaxed">{displayPoll.description}</p>}
+              </div>
+              {isExpired && (
+                <div className="bg-red-500/10 border border-red-500/20 text-red-500 px-3 py-1.5 rounded-lg flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  <span className="font-black uppercase tracking-widest text-[10px]">Ended</span>
+                </div>
+              )}
             </div>
             <AnimatePresence mode="wait">
               {voteSuccess ? (
@@ -126,12 +136,12 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
                   </div>
                   <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-xs sm:max-w-sm">
                     <Button onClick={() => { setVoteSuccess(false); setHasVoted(true); }} size="lg" className="w-full bg-foreground text-background font-black uppercase tracking-widest h-12 sm:h-14 rounded-xl sm:rounded-2xl shadow-xl hover:opacity-90 transition-all text-xs sm:text-sm">Show Results</Button>
-                    {displayPoll.allowMultipleVotes && (
+                    {(displayPoll.allowMultipleVotes && !isExpired) && (
                       <Button onClick={() => { setVoteSuccess(false); setSelectedOptionId(null); }} variant="outline" size="lg" className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl font-black uppercase tracking-widest border-foreground/10 hover:border-foreground transition-all text-xs sm:text-sm">Vote Again</Button>
                     )}
                   </div>
                 </motion.div>
-              ) : (!hasVoted && !viewingResults) && !isOwner ? (
+              ) : (!hasVoted && !viewingResults && !isExpired) && !isOwner ? (
                 <>
                   {!isDomainAllowed ? (
                     <div className="flex flex-col items-center justify-center py-20 text-center space-y-6">
@@ -155,7 +165,7 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
               ) : (
                 <div className="space-y-6 sm:space-y-8">
                   <PollResults options={displayPoll.options} totalVotes={displayPoll.totalVotes} resultsVisibility={displayPoll.resultsVisibility} isOwner={isOwner} allowMultipleVotes={displayPoll.allowMultipleVotes} actualVoteCast={hasVoted && !viewingResults} />
-                  {!hasVoted && viewingResults && (
+                  {!hasVoted && viewingResults && !isExpired && (
                     <Button onClick={() => setViewingResults(false)} variant="ghost" className="font-black uppercase tracking-widest text-[10px] text-foreground/40 hover:text-foreground">
                       ← Back to Voting
                     </Button>

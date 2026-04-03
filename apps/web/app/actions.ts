@@ -20,6 +20,12 @@ export async function createPoll(formData: FormData) {
   const anonymizeData = formData.get("anonymizeData") === "true";
   const resultsVisibility = (formData.get("resultsVisibility") || "PUBLIC") as string;
   const allowedDomains = formData.get("allowedDomains") as string | null;
+  const expiresAtStr = formData.get("expiresAt") as string | null;
+
+  let expiresAt: Date | null = null;
+  if (expiresAtStr) {
+    expiresAt = new Date(expiresAtStr);
+  }
 
   // Extract all options
   const options: string[] = [];
@@ -49,6 +55,7 @@ export async function createPoll(formData: FormData) {
       anonymizeData,
       resultsVisibility,
       allowedDomains: allowedDomains?.trim() || null,
+      expiresAt,
       creatorId: userId,
       options: {
         create: options.map((opt) => ({
