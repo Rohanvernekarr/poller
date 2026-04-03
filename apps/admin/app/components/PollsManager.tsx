@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@repo/ui/table";
 import { Button } from "@repo/ui/button";
-import { Trash2, AlertTriangle, Search, Filter } from "lucide-react";
+import { Trash2, AlertTriangle, Search, Filter, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import { Input } from "@repo/ui/input";
 import { DeletePollModal } from "./DeletePollModal";
+import Link from "next/link";
 
 interface PollsManagerProps {
   initialPolls: any[];
@@ -113,14 +114,26 @@ export function PollsManager({ initialPolls }: PollsManagerProps) {
                   </div>
                 </TableCell>
                 <TableCell className="text-right px-6">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => handleDeletePoll(poll.id)}
-                    className="h-9 w-9 p-0 bg-white/5 hover:bg-red-500/10 text-gray-500 hover:text-red-400 border border-white/5"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                  <div className="flex items-center justify-end gap-2">
+                    <Link href={`/polls/${poll.id}`}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-9 px-3 bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white border border-white/5 text-[10px] font-black uppercase tracking-widest gap-1.5"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                        View
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDeletePoll(poll.id)}
+                      className="h-9 w-9 p-0 bg-white/5 hover:bg-red-500/10 text-gray-500 hover:text-red-400 border border-white/5"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
