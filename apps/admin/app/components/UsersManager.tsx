@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@repo/ui/table";
 import { Button } from "@repo/ui/button";
-import { Settings, ShieldAlert, ShieldCheck, Search } from "lucide-react";
+import { Settings, ShieldAlert, ShieldCheck, Search, Eye } from "lucide-react";
 import { EditUserModal } from "./EditUserModal";
+import Link from "next/link";
 import { Input } from "@repo/ui/input";
 
 interface UsersManagerProps {
@@ -94,6 +95,15 @@ export function UsersManager({ initialUsers }: UsersManagerProps) {
                 </TableCell>
                 <TableCell className="text-right px-6">
                   <div className="flex justify-end gap-2">
+                    <Link href={`/users/${user.id}`}>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-9 w-9 p-0 bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white border border-white/5"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                    </Link>
                     <Button 
                       variant="ghost" 
                       size="sm" 
