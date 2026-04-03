@@ -12,9 +12,9 @@ export function HeroSection() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <h1 className="text-5xl sm:text-6xl font-black tracking-tight mb-6 leading-[0.9] text-foreground uppercase">
+      <h1 className="text-5xl sm:text-6xl font-black mb-10 leading-[0.9] text-foreground uppercase">
         The simplest <br />
-        <span className="text-foreground/20">
+        <span className="text-foreground/30">
           way to gather 
         </span> <br />
         opinions

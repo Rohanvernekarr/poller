@@ -47,6 +47,7 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
   const { data: session, status } = useSession();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fpPromise.load().then(fp => fp.get()).then(res => setFingerprint(res.visitorId));
   }, []);
 
