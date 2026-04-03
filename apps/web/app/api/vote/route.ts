@@ -42,10 +42,10 @@ export async function POST(req: NextRequest) {
       if (!session?.user?.email) {
         return NextResponse.json({ error: "You must be signed in to vote on this restricted poll" }, { status: 401 });
       }
-      
+
       const userDomain = session.user.email.split("@")[1]?.toLowerCase();
       const allowedList = poll.allowedDomains.toLowerCase().split(",").map((d: string) => d.trim());
-      
+
       const isAllowed = allowedList.some((domain: string) => {
         const cleanDomain = domain.startsWith("@") ? domain.substring(1) : domain;
         return userDomain === cleanDomain;
@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
     });
 
     const res = NextResponse.json({ success: true });
-    
+
     // Set voted cookie
     res.cookies.set(`voted_${pollId}`, "true", {
       httpOnly: true,

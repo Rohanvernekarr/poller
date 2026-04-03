@@ -154,7 +154,6 @@ export function PollSidebar({
         >
           <p className="text-[9px] font-black uppercase tracking-widest text-foreground/25 px-1">Owner Controls</p>
 
-          {/* Primary action */}
           <Link href={`/poll/${id}/results`} className="block w-full">
             <Button className="w-full h-11 bg-foreground text-background hover:opacity-90 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-foreground/10 flex items-center justify-center gap-2 transition-all">
               <BarChart3 className="w-4 h-4" />
