@@ -150,52 +150,57 @@ export function PollSidebar({
           initial={{ opacity: 0, x: 10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
-          className="pt-6 border-t border-border mt-2 space-y-2"
+          className="pt-5 border-t border-border space-y-3"
         >
+          <p className="text-[9px] font-black uppercase tracking-widest text-foreground/25 px-1">Owner Controls</p>
+
+          {/* Primary action */}
           <Link href={`/poll/${id}/results`} className="block w-full">
-            <Button
-              className="w-full h-10 bg-foreground text-background hover:opacity-90 rounded-xl font-black uppercase tracking-widest text-[9px] transition-all shadow-lg shadow-foreground/10 flex items-center justify-center gap-2"
-            >
-              <BarChart3 className="w-3.5 h-3.5" />
-              Results
+            <Button className="w-full h-11 bg-foreground text-background hover:opacity-90 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-foreground/10 flex items-center justify-center gap-2 transition-all">
+              <BarChart3 className="w-4 h-4" />
+              View Full Results
             </Button>
           </Link>
-          
-          <Button
-            onClick={onOpenSettings}
-            variant="outline"
-            className="w-full h-10 border-border text-foreground/40 hover:text-foreground hover:bg-foreground/5 rounded-xl font-black uppercase tracking-widest text-[9px] flex items-center justify-center gap-2 transition-all"
-          >
-            <Settings2 className="w-3.5 h-3.5" />
-            Settings
-          </Button>
 
-          {isExpired ? (
+          {/* Secondary row */}
+          <div className="flex gap-2">
             <Button
-              onClick={onReopenPoll}
-              isLoading={isStoppingVoting}
+              onClick={onOpenSettings}
               variant="outline"
-              className="w-full h-10 border-border text-foreground/60 hover:text-foreground hover:bg-foreground/5 rounded-xl font-black uppercase tracking-widest text-[9px] flex items-center justify-center gap-2 transition-all"
+              className="flex-1 h-9 border-border text-foreground/50 hover:text-foreground hover:bg-foreground/5 rounded-xl font-black uppercase tracking-widest text-[9px] flex items-center justify-center gap-1.5 transition-all"
             >
-              <Play className="w-3.5 h-3.5" />
-              Reopen Poll
+              <Settings2 className="w-3.5 h-3.5" />
+              Settings
             </Button>
-          ) : (
-            <Button
-              onClick={onStopVoting}
-              isLoading={isStoppingVoting}
-              variant="ghost"
-              className="w-full h-10 text-[9px] font-black uppercase tracking-widest text-red-500/40 hover:text-red-500 hover:bg-red-500/5 transition-all flex items-center justify-center gap-2 rounded-xl"
-            >
-              <Square className="w-3.5 h-3.5" />
-              Stop Voting
-            </Button>
-          )}
 
+            {isExpired ? (
+              <Button
+                onClick={onReopenPoll}
+                isLoading={isStoppingVoting}
+                variant="outline"
+                className="flex-1 h-9 border-border text-green-500/60 hover:text-green-500 hover:bg-green-500/5 hover:border-green-500/20 rounded-xl font-black uppercase tracking-widest text-[9px] flex items-center justify-center gap-1.5 transition-all"
+              >
+                <Play className="w-3.5 h-3.5" />
+                Reopen
+              </Button>
+            ) : (
+              <Button
+                onClick={onStopVoting}
+                isLoading={isStoppingVoting}
+                variant="outline"
+                className="flex-1 h-9 border-border text-foreground/30 hover:text-red-500 hover:border-red-500/20 hover:bg-red-500/5 rounded-xl font-black uppercase tracking-widest text-[9px] flex items-center justify-center gap-1.5 transition-all"
+              >
+                <Square className="w-3.5 h-3.5" />
+                Stop
+              </Button>
+            )}
+          </div>
+
+          {/* Danger */}
           <Button
             onClick={onDelete}
             variant="ghost"
-            className="w-full h-10 text-[9px] font-black uppercase tracking-widest text-red-500/30 hover:text-red-500 hover:bg-red-500/5 transition-all flex items-center justify-center gap-2 rounded-xl"
+            className="w-full h-8 text-[9px] font-black uppercase tracking-widest text-foreground/20 hover:text-red-500 hover:bg-red-500/5 transition-all flex items-center justify-center gap-2 rounded-xl"
             isLoading={isDeleting}
           >
             Delete
