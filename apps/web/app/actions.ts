@@ -32,6 +32,9 @@ export async function createPoll(formData: FormData) {
   let expiresAt: Date | null = null;
   if (expireDate && expireTime) {
     expiresAt = new Date(`${expireDate}T${expireTime}`);
+    if (expiresAt <= new Date()) {
+      throw new Error("Expiration date and time must be in the future.");
+    }
   }
 
   // Extract all options

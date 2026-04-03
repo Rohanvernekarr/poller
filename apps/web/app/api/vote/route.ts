@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
 
     if (!poll.allowMultipleVotes) {
       if (hasVotedCookie) {
-        return NextResponse.json({ error: "You have already voted (Cookie detected)" }, { status: 403 });
+        return NextResponse.json({ error: "You have already voted" }, { status: 403 });
       }
 
       // Check DB for duplicates
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
       });
 
       if (existingVote) {
-        return NextResponse.json({ error: "You have already voted (Fingerprint/IP/User detected)" }, { status: 403 });
+        return NextResponse.json({ error: "You have already voted" }, { status: 403 });
       }
     }
 

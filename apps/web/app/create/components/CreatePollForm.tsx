@@ -5,18 +5,34 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@repo/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@repo/ui/card";
 import { Input } from "@repo/ui/input";
-import { Plus, Trash2, ArrowRight, Settings2, ChevronDown, AlertCircle, CalendarClock } from "lucide-react";
+import { Plus, Trash2, ArrowRight, Settings2, ChevronDown, AlertCircle, CalendarClock, Lock } from "lucide-react";
 import { createPoll } from "../../actions";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { TechnicalBackButton } from "../../components/TechnicalBackButton";
 import { useFormStatus } from "react-dom";
+import { PremiumDateTimePicker } from "./PremiumDateTimePicker";
+
+const getLocalDateString = () => {
+  const now = new Date();
+  return `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+};
+
+const getLocalTimeString = () => {
+  const now = new Date();
+  return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+};
 
 export function CreatePollForm() {
   const { data: session } = useSession();
   const [options, setOptions] = useState([{ id: 1, text: "" }, { id: 2, text: "" }]);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [requireAuth, setRequireAuth] = useState(false);
+  const [enableExpiration, setEnableExpiration] = useState(false);
+  
+  // Date and Time State for Expiration validation
+  const [expireDate, setExpireDate] = useState("");
+  const [expireTime, setExpireTime] = useState("");
 
   const handleAddOption = () => {
     if (options.length >= 10) return;
@@ -66,7 +82,37 @@ export function CreatePollForm() {
           </CardHeader>
           <CardContent>
             <form 
+              onSubmit={(e) => {
+                if (enableExpiration) {
+                  if (!expireDate || !expireTime) {
+                    e.preventDefault();
+                    alert("Please set both a valid Date and Time for the expiration lock.");
+                    return;
+                  }
+                  
+                  // Use local timezone validation
+                  const localToday = getLocalDateString();
+                  if (expireDate === localToday) {
+                    if (expireTime < getLocalTimeString()) {
+                      e.preventDefault();
+                      alert("Expiration time has already passed! Please select a time in the future.");
+                      return;
+                    }
+                  } else if (expireDate < localToday) {
+                    e.preventDefault();
+                    alert("Expiration date cannot be in the past.");
+                    return;
+                  }
+                }
+              }}
               action={async (formData) => {
+                if (enableExpiration) {
+                  formData.append("expireDate", expireDate);
+                  formData.append("expireTime", expireTime);
+                } else {
+                  formData.delete("expireDate");
+                  formData.delete("expireTime");
+                }
                 try {
                   await createPoll(formData);
                 } catch (e) {
@@ -180,34 +226,37 @@ export function CreatePollForm() {
                          <SettingToggle name="hideShareButton" title="Stealth Mode" desc="Hide share icons from participants" />
                          <SettingToggle name="anonymizeData" title="Anonymize IP" desc="Fully encrypt participant footprints" />
 
-                         <div className="pt-6 border-t border-border space-y-4">
-                           <label className="text-[10px] font-black uppercase tracking-widest text-foreground/40 block ml-1 flex items-center gap-2">
-                             <CalendarClock className="w-3 h-3" />
-                             Auto-Lock Expiration (Optional)
-                           </label>
+                         <div className="pt-2 border-t border-border">
+                           <SettingToggle 
+                             name="enableExpiration" 
+                             title="Auto-Lock Expiration" 
+                             desc="Automatically close this poll at a specified date and time" 
+                             checked={enableExpiration}
+                             onChange={(e) => setEnableExpiration(e.target.checked)}
+                           />
                            
-                           <div className="grid grid-cols-2 gap-4">
-                             <div className="relative group pt-4">
-                               <div className="absolute top-1 left-3 pointer-events-none text-foreground/40 text-[9px] font-black uppercase tracking-widest bg-background/80 px-1 backdrop-blur-sm z-10 transition-all">Select Date</div>
-                               <input 
-                                 type="date" 
-                                 name="expireDate" 
-                                 className="w-full h-14 rounded-2xl bg-foreground/[0.02] border border-border text-foreground text-sm font-bold px-4 pt-1 focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer appearance-none uppercase tracking-widest [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:hover:opacity-100 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:dark:invert transition-all hover:bg-foreground/[0.04]"
-                               />
-                             </div>
-                             <div className="relative group pt-4">
-                               <div className="absolute top-1 left-3 pointer-events-none text-foreground/40 text-[9px] font-black uppercase tracking-widest bg-background/80 px-1 backdrop-blur-sm z-10 transition-all">Set Time</div>
-                               <input 
-                                 type="time" 
-                                 name="expireTime" 
-                                 className="w-full h-14 rounded-2xl bg-foreground/[0.02] border border-border text-foreground text-sm font-bold px-4 pt-1 focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer appearance-none uppercase tracking-widest [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:hover:opacity-100 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:dark:invert transition-all hover:bg-foreground/[0.04]"
-                               />
-                             </div>
-                           </div>
+                           <AnimatePresence>
+                             {enableExpiration && (
+                               <motion.div 
+                                 initial={{ height: 0, opacity: 0 }}
+                                 animate={{ height: "auto", opacity: 1 }}
+                                 exit={{ height: 0, opacity: 0 }}
+                                 className="overflow-hidden"
+                               >
+                                 <PremiumDateTimePicker 
+                                   expireDate={expireDate} 
+                                   setExpireDate={setExpireDate} 
+                                   expireTime={expireTime} 
+                                   setExpireTime={setExpireTime} 
+                                 />
 
-                           <p className="text-[9px] font-bold text-foreground/40 uppercase tracking-widest flex items-start gap-2 max-w-[90%] leading-relaxed">
-                             If set, voting will automatically lock and seamlessly switch to "Results Only" at this exact time.
-                           </p>
+                                 <p className="text-[9px] font-bold text-foreground/40 uppercase tracking-widest flex items-start gap-2 max-w-[90%] leading-relaxed pt-3 ml-1">
+                                   <CalendarClock className="w-3 h-3 mt-0.5" />
+                                   If set, voting will automatically lock and seamlessly switch to "Results Only" at this exact time.
+                                 </p>
+                               </motion.div>
+                             )}
+                           </AnimatePresence>
                          </div>
 
                          <div className="pt-6 border-t border-border space-y-4">
