@@ -74,6 +74,13 @@ export async function POST(req: NextRequest) {
       }
 
       // Check DB for duplicates
+      //
+      // TODO (Future): Add a `voteRestriction` field to the Poll schema with two modes:
+      //   "DEVICE"  → current behaviour — block by fingerprintHash + ipAddress + userId (1 device = 1 vote)
+      //   "ACCOUNT" → block only by userId for signed-in users; fingerprint/IP for anonymous
+      //               This lets two different accounts on the same device each cast a vote.
+      // Wire the toggle into PollSettingsModal and CreatePollForm when ready.
+      //
       const existingVote = await prisma.vote.findFirst({
         where: {
           pollId,
