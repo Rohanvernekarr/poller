@@ -108,8 +108,8 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
     <div className="w-full max-w-7xl mx-auto selection:bg-foreground/20 pb-20 px-0 sm:px-6 pt-0">
       <div className="px-6 sm:px-0">
         <TechnicalBackButton 
-          href={isOwner ? "/dashboard" : "/"} 
-          text={isOwner ? "Back to Dashboard" : "Back to Home"} 
+          href={session?.user ? "/dashboard" : "/"} 
+          text={session?.user ? "Back to Dashboard" : "Back to Home"} 
         />
       </div>
       <Card className="glass border-border sm:border shadow-2xl rounded-none sm:rounded-[2rem] overflow-hidden bg-background/50 backdrop-blur-sm border-x-0 sm:border-x">
