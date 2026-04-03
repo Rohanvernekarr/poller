@@ -10,7 +10,7 @@ import { updatePollSettings, deletePoll } from "../../actions";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { CheckCircle2, Lock } from "lucide-react";
+import { CheckCircle2, Lock, Clock } from "lucide-react";
 import { CommentsSection } from "./CommentsSection";
 import { PollVoting } from "./components/PollVoting";
 import { PollResults } from "./components/PollResults";
@@ -117,12 +117,17 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
                 <h1 className="text-2xl md:text-5xl font-black tracking-tight mb-3 leading-tight uppercase italic">{displayPoll.title}</h1>
                 {displayPoll.description && <p className="text-base md:text-lg text-foreground/60 font-medium leading-relaxed">{displayPoll.description}</p>}
               </div>
-              {isExpired && (
-                <div className="bg-red-500/10 border border-red-500/20 text-red-500 px-3 py-1.5 rounded-lg flex items-center gap-2">
-                  <Lock className="w-4 h-4" />
-                  <span className="font-black uppercase tracking-widest text-[10px]">Ended</span>
-                </div>
-              )}
+              <div className="flex flex-col items-end gap-2">
+                {isExpired && (
+                  <div className="bg-red-500/10 border border-red-500/20 text-red-500 px-3 py-1.5 rounded-lg flex items-center gap-2">
+                    <Lock className="w-4 h-4" />
+                    <span className="font-black uppercase tracking-widest text-[10px]">Ended</span>
+                  </div>
+                )}
+                {!isExpired && displayPoll.expiresAt && (
+                  <LiveTimer expiresAt={displayPoll.expiresAt} />
+                )}
+              </div>
             </div>
             <AnimatePresence mode="wait">
               {voteSuccess ? (
@@ -218,5 +223,49 @@ function SocialIcon({ icon, color }: { icon: any, color?: string }) {
     <button className={`w-full aspect-square rounded-xl bg-foreground/5 border border-border text-foreground hover:text-white flex items-center justify-center transition-all ${color}`}>
       {icon}
     </button>
+  );
+}
+
+function LiveTimer({ expiresAt }: { expiresAt: Date | string }) {
+  const [timeLeft, setTimeLeft] = useState<string>("");
+
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const difference = new Date(expiresAt).getTime() - new Date().getTime();
+      
+      if (difference <= 0) {
+        return "Ending now...";
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((difference / 1000 / 60) % 60);
+      const seconds = Math.floor((difference / 1000) % 60);
+
+      const parts = [];
+      if (days > 0) parts.push(`${days}d`);
+      if (hours > 0 || days > 0) parts.push(`${hours}h`);
+      if (minutes > 0 || hours > 0 || days > 0) parts.push(`${minutes}m`);
+      parts.push(`${seconds}s`);
+
+      return parts.join(" ");
+    };
+
+    setTimeLeft(calculateTimeLeft());
+
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [expiresAt]);
+
+  return (
+    <div className="bg-amber-500/10 border border-amber-500/20 text-amber-500 px-3 py-1.5 rounded-lg flex items-center gap-2">
+      <Clock className="w-4 h-4 animate-pulse" />
+      <span className="font-black uppercase tracking-widest text-[10px] whitespace-nowrap">
+        {timeLeft || "Calculating..."}
+      </span>
+    </div>
   );
 }
