@@ -1,7 +1,7 @@
 import { prisma } from "@repo/db";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
-import { authOptions } from "../../api/auth/[...nextauth]/route";
+import { authOptions } from "../../../lib/auth";
 import { UserNav } from "../../components/UserNav";
 import { Card, CardHeader, CardTitle, CardContent } from "@repo/ui/card";
 import { ShieldCheck, Database, Server, Clock } from "lucide-react";

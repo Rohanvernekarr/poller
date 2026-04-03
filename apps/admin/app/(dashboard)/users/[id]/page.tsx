@@ -1,7 +1,7 @@
 import { prisma } from "@repo/db";
 import { getServerSession } from "next-auth/next";
 import { redirect, notFound } from "next/navigation";
-import { authOptions } from "../../../api/auth/[...nextauth]/route";
+import { authOptions } from "../../../../lib/auth";
 import { AdminUserDetail } from "../../../components/AdminUserDetail";
 import { UserNav } from "../../../components/UserNav";
 import Link from "next/link";
