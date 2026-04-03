@@ -36,15 +36,6 @@ export function Navigation() {
             <Link href="/" className="text-2xl font-black uppercase tracking-tight text-foreground transition-opacity hover:opacity-70">
               Poller
             </Link>
-            {session && (
-              <Link 
-                href="/dashboard" 
-                className={`hidden md:block text-[11px] font-black uppercase tracking-widest transition-all ${pathname === '/dashboard' ? 'text-foreground' : 'text-foreground/40 hover:text-foreground'}`}
-                title="My Dashboard"
-              >
-                Dashboard
-              </Link>
-            )}
           </div>
           
           <div className="flex items-center gap-3 sm:gap-6">
