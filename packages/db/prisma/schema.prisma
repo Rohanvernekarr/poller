@@ -21,6 +21,7 @@ model User {
   sessions      Session[]
   polls         Poll[]
   comments      Comment[]
+  votes         Vote[]
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @default(now()) @updatedAt
@@ -101,6 +102,7 @@ model Vote {
   id              String   @id @default(cuid())
   pollId          String
   optionId        String
+  userId          String?
   
   // Tracking fields for duplicate prevention
   fingerprintHash String
@@ -115,6 +117,7 @@ model Vote {
 
   poll            Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
   option          PollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  user            User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Comment {

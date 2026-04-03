@@ -11,26 +11,41 @@ export default async function DashboardPage() {
     redirect("/signin");
   }
 
-  const polls = await prisma.poll.findMany({
-    where: { creatorId: session.user.id },
-    include: {
-      options: {
-        include: {
-          _count: {
-            select: { votes: true }
+  const [polls, userVotes] = await Promise.all([
+    prisma.poll.findMany({
+      where: { creatorId: session.user.id },
+      include: {
+        options: {
+          include: {
+            _count: { select: { votes: true } }
           }
-        }
+        },
+        _count: { select: { votes: true } }
       },
-      _count: {
-        select: { votes: true }
-      }
-    },
-    orderBy: { createdAt: "desc" }
-  });
+      orderBy: { createdAt: "desc" }
+    }),
+    prisma.vote.findMany({
+      where: { userId: session.user.id },
+      include: {
+        poll: {
+          include: {
+            options: {
+              include: {
+                _count: { select: { votes: true } }
+              }
+            },
+            _count: { select: { votes: true } }
+          }
+        },
+        option: true
+      },
+      orderBy: { createdAt: "desc" }
+    })
+  ]);
 
   return (
     <div className="min-h-screen bg-black text-white p-8 pt-24 pb-20">
-      <DashboardContent polls={polls} />
+      <DashboardContent polls={polls} userVotes={userVotes} />
     </div>
   );
 }

@@ -21,8 +21,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Poll not found" }, { status: 404 });
     }
 
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id || null;
+
     if (poll.allowedDomains) {
-      const session = await getServerSession(authOptions);
       if (!session?.user?.email) {
         return NextResponse.json({ error: "You must be signed in to vote on this restricted poll" }, { status: 401 });
       }
@@ -63,13 +65,14 @@ export async function POST(req: NextRequest) {
           pollId,
           OR: [
             { fingerprintHash },
-            { ipAddress: ip }
+            { ipAddress: ip },
+            ...(userId ? [{ userId }] : [])
           ]
         }
       });
 
       if (existingVote) {
-        return NextResponse.json({ error: "You have already voted (Fingerprint/IP detected)" }, { status: 403 });
+        return NextResponse.json({ error: "You have already voted (Fingerprint/IP/User detected)" }, { status: 403 });
       }
     }
 
@@ -78,6 +81,7 @@ export async function POST(req: NextRequest) {
       data: {
         pollId,
         optionId,
+        userId,
         fingerprintHash,
         ipAddress: ip,
         userAgent,
