@@ -16,6 +16,7 @@ export function CreatePollForm() {
   const { data: session } = useSession();
   const [options, setOptions] = useState([{ id: 1, text: "" }, { id: 2, text: "" }]);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [requireAuth, setRequireAuth] = useState(false);
 
   const handleAddOption = () => {
     if (options.length >= 10) return;
@@ -173,7 +174,8 @@ export function CreatePollForm() {
                        className="overflow-hidden"
                      >
                        <div className="space-y-8 pt-10 pb-4 px-2">
-                         <SettingToggle name="requireNames" title="Require names" desc="Voters must identify themselves" />
+                         <SettingToggle name="requireAuth" title="Sign In Required" desc="Only registered users can vote" checked={requireAuth} onChange={(e) => setRequireAuth(e.target.checked)} />
+                         <SettingToggle name="requireNames" title="Require names" desc="Voters must identify themselves" disabled={requireAuth} />
                          <SettingToggle name="allowComments" title="Allow comments" desc="Enable the public discussion board" />
                          <SettingToggle name="hideShareButton" title="Stealth Mode" desc="Hide share icons from participants" />
                          <SettingToggle name="anonymizeData" title="Anonymize IP" desc="Fully encrypt participant footprints" />
@@ -183,13 +185,26 @@ export function CreatePollForm() {
                              <CalendarClock className="w-3 h-3" />
                              Auto-Lock Expiration (Optional)
                            </label>
-                           <div className="relative group">
-                             <input 
-                               type="datetime-local" 
-                               name="expiresAt" 
-                               className="w-full h-14 rounded-2xl bg-foreground/[0.02] border border-border text-foreground text-sm font-bold px-4 focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer"
-                             />
+                           
+                           <div className="grid grid-cols-2 gap-4">
+                             <div className="relative group pt-4">
+                               <div className="absolute top-1 left-3 pointer-events-none text-foreground/40 text-[9px] font-black uppercase tracking-widest bg-background/80 px-1 backdrop-blur-sm z-10 transition-all">Select Date</div>
+                               <input 
+                                 type="date" 
+                                 name="expireDate" 
+                                 className="w-full h-14 rounded-2xl bg-foreground/[0.02] border border-border text-foreground text-sm font-bold px-4 pt-1 focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer appearance-none uppercase tracking-widest [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:hover:opacity-100 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:dark:invert transition-all hover:bg-foreground/[0.04]"
+                               />
+                             </div>
+                             <div className="relative group pt-4">
+                               <div className="absolute top-1 left-3 pointer-events-none text-foreground/40 text-[9px] font-black uppercase tracking-widest bg-background/80 px-1 backdrop-blur-sm z-10 transition-all">Set Time</div>
+                               <input 
+                                 type="time" 
+                                 name="expireTime" 
+                                 className="w-full h-14 rounded-2xl bg-foreground/[0.02] border border-border text-foreground text-sm font-bold px-4 pt-1 focus:outline-none focus:ring-2 focus:ring-foreground/20 cursor-pointer appearance-none uppercase tracking-widest [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:hover:opacity-100 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:dark:invert transition-all hover:bg-foreground/[0.04]"
+                               />
+                             </div>
                            </div>
+
                            <p className="text-[9px] font-bold text-foreground/40 uppercase tracking-widest flex items-start gap-2 max-w-[90%] leading-relaxed">
                              If set, voting will automatically lock and seamlessly switch to "Results Only" at this exact time.
                            </p>
@@ -252,13 +267,16 @@ function SubmitButton() {
   );
 }
 
-function SettingToggle({ name, title, desc }: { name: string; title: string; desc: string }) {
+function SettingToggle({ name, title, desc, checked, disabled, onChange }: { name: string; title: string; desc: string; checked?: boolean; disabled?: boolean; onChange?: (e: any) => void }) {
   return (
-    <label className="flex items-center gap-5 cursor-pointer group">
+    <label className={`flex items-center gap-5 cursor-pointer group ${disabled ? "opacity-30 pointer-events-none grayscale" : ""}`}>
       <input 
         type="checkbox" 
         name={name} 
         value="true" 
+        checked={checked}
+        disabled={disabled}
+        onChange={onChange}
         className="w-6 h-6 rounded-lg border-foreground/20 bg-foreground/5 text-foreground focus:ring-foreground accent-foreground" 
       />
       <div className="flex flex-col gap-1">

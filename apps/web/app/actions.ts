@@ -13,18 +13,25 @@ export async function createPoll(formData: FormData) {
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
   const allowMultipleVotes = formData.get("allowMultipleVotes") === "true";
-  const requireNames = formData.get("requireNames") === "true";
+  let requireNames = formData.get("requireNames") === "true";
   const hasOtherOption = formData.get("hasOtherOption") === "true";
   const allowComments = formData.get("allowComments") === "true";
   const hideShareButton = formData.get("hideShareButton") === "true";
   const anonymizeData = formData.get("anonymizeData") === "true";
   const resultsVisibility = (formData.get("resultsVisibility") || "PUBLIC") as string;
   const allowedDomains = formData.get("allowedDomains") as string | null;
-  const expiresAtStr = formData.get("expiresAt") as string | null;
+  const requireAuth = formData.get("requireAuth") === "true";
+  
+  const expireDate = formData.get("expireDate") as string | null;
+  const expireTime = formData.get("expireTime") as string | null;
+
+  if (requireAuth) {
+    requireNames = false;
+  }
 
   let expiresAt: Date | null = null;
-  if (expiresAtStr) {
-    expiresAt = new Date(expiresAtStr);
+  if (expireDate && expireTime) {
+    expiresAt = new Date(`${expireDate}T${expireTime}`);
   }
 
   // Extract all options
@@ -53,6 +60,7 @@ export async function createPoll(formData: FormData) {
       allowComments,
       hideShareButton,
       anonymizeData,
+      requireAuth,
       resultsVisibility,
       allowedDomains: allowedDomains?.trim() || null,
       expiresAt,

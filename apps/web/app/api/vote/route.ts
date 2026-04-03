@@ -7,7 +7,7 @@ import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function POST(req: NextRequest) {
   try {
-    const { pollId, optionId, fingerprintClient, voterName, customAnswer } = await req.json();
+    let { pollId, optionId, fingerprintClient, voterName, customAnswer } = await req.json();
 
     if (!pollId || !optionId) {
       return NextResponse.json({ error: "Missing pollId or optionId" }, { status: 400 });
@@ -27,6 +27,16 @@ export async function POST(req: NextRequest) {
 
     const session = await getServerSession(authOptions);
     const userId = session?.user?.id || null;
+
+    if (session?.user && !voterName) {
+      voterName = session.user.name || null;
+    }
+
+    if (poll.requireAuth) {
+      if (!session?.user) {
+        return NextResponse.json({ error: "You must be signed in to vote on this poll" }, { status: 401 });
+      }
+    }
 
     if (poll.allowedDomains) {
       if (!session?.user?.email) {
@@ -157,6 +167,7 @@ export async function GET(req: NextRequest) {
     anonymizeData: poll.anonymizeData,
     resultsVisibility: poll.resultsVisibility,
     allowedDomains: poll.allowedDomains,
+    requireAuth: poll.requireAuth,
     expiresAt: poll.expiresAt,
   });
 }

@@ -48,6 +48,7 @@ export default async function PollPage({ params }: { params: Promise<{ id: strin
           anonymizeData: poll.anonymizeData,
           resultsVisibility: poll.resultsVisibility,
           allowedDomains: (poll as any).allowedDomains,
+          requireAuth: poll.requireAuth,
           expiresAt: poll.expiresAt,
         }} 
         hasVotedInitial={hasVoted && !poll.allowMultipleVotes} 

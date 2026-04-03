@@ -25,7 +25,7 @@ interface Poll {
   createdAt: Date; options: PollOption[]; totalVotes: number; allowMultipleVotes: boolean; 
   requireNames?: boolean; hasOtherOption?: boolean; allowComments?: boolean; hideShareButton?: boolean;
   anonymizeData?: boolean; resultsVisibility?: string; allowedDomains?: string | null;
-  expiresAt?: Date | string | null;
+  expiresAt?: Date | string | null; requireAuth?: boolean;
 }
 
 export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll: Poll, hasVotedInitial: boolean, isOwner: boolean }) {
@@ -79,14 +79,17 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
 
   const topOption = displayPoll.options.reduce((prev, current) => (prev.voteCount > current.voteCount) ? prev : current);
 
-  // Domain Restriction Logic
-  let isDomainAllowed = true;
-  let domainError = "";
+  // Auth & Domain Restriction Logic
+  let isAuthAllowed = true;
+  let authError = "";
   
-  if (displayPoll.allowedDomains) {
+  if (displayPoll.requireAuth && status === "unauthenticated") {
+    isAuthAllowed = false;
+    authError = "This poll requires you to sign in to vote.";
+  } else if (displayPoll.allowedDomains) {
     if (status === "unauthenticated") {
-      isDomainAllowed = false;
-      domainError = "You must sign in to vote on this restricted poll.";
+      isAuthAllowed = false;
+      authError = "You must sign in to vote on this restricted poll.";
     } else if (session?.user?.email) {
       const userDomain = session.user.email.split("@")[1]?.toLowerCase();
       const allowedList = displayPoll.allowedDomains.toLowerCase().split(",").map(d => d.trim());
@@ -95,8 +98,8 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
         return userDomain === cleanDomain;
       });
       if (!isAllowed) {
-        isDomainAllowed = false;
-        domainError = `Your email domain (@${userDomain}) is not authorized. Allowed domains: ${displayPoll.allowedDomains}`;
+        isAuthAllowed = false;
+        authError = `Your email domain (@${userDomain}) is not authorized. Allowed domains: ${displayPoll.allowedDomains}`;
       }
     }
   }
@@ -131,7 +134,7 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
             </div>
             <AnimatePresence mode="wait">
               {voteSuccess ? (
-                <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="py-12 sm:py-20 flex flex-col items-center justify-center text-center space-y-6 sm:space-y-8">
+                <div className="py-12 sm:py-20 flex flex-col items-center justify-center text-center space-y-6 sm:space-y-8">
                   <div className="w-16 h-16 sm:w-24 sm:h-24 bg-green-500/10 rounded-full flex items-center justify-center border-2 border-green-500/20">
                     <CheckCircle2 className="w-8 h-8 sm:w-12 sm:h-12 text-green-500" />
                   </div>
@@ -145,16 +148,16 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
                       <Button onClick={() => { setVoteSuccess(false); setSelectedOptionId(null); }} variant="outline" size="lg" className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl font-black uppercase tracking-widest border-foreground/10 hover:border-foreground transition-all text-xs sm:text-sm">Vote Again</Button>
                     )}
                   </div>
-                </motion.div>
+                </div>
               ) : (!hasVoted && !viewingResults && !isExpired) && !isOwner ? (
                 <>
-                  {!isDomainAllowed ? (
+                  {!isAuthAllowed ? (
                     <div className="flex flex-col items-center justify-center py-20 text-center space-y-6">
                       <div className="w-20 h-20 bg-foreground/5 rounded-full flex items-center justify-center mb-2">
                         <Lock className="w-10 h-10 text-foreground/40" />
                       </div>
                       <h2 className="text-3xl font-black uppercase tracking-tight italic">Restricted Poll</h2>
-                      <p className="text-foreground/60 max-w-md">{domainError}</p>
+                      <p className="text-foreground/60 max-w-md">{authError}</p>
                       {status === "unauthenticated" && (
                         <Link href={`/signin?callbackUrl=${encodeURIComponent(`/poll/${displayPoll.id}`)}`}>
                           <Button size="lg" className="mt-4 px-10 h-14 bg-foreground text-background font-black uppercase tracking-widest rounded-2xl shadow-xl">
@@ -164,7 +167,7 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
                       )}
                     </div>
                   ) : (
-                    <PollVoting options={displayPoll.options} selectedOptionId={selectedOptionId} onSelectOption={setSelectedOptionId} onVote={handleVote} onViewResults={() => setViewingResults(true)} isVoting={isVoting} votingError={votingError} requireNames={displayPoll.requireNames} voterName={voterName} setVoterName={setVoterName} customAnswer={customAnswer} setCustomAnswer={setCustomAnswer} />
+                    <PollVoting options={displayPoll.options} selectedOptionId={selectedOptionId} onSelectOption={setSelectedOptionId} onVote={handleVote} onViewResults={() => setViewingResults(true)} isVoting={isVoting} votingError={votingError} requireNames={!!(displayPoll.requireNames && !session?.user)} voterName={voterName} setVoterName={setVoterName} customAnswer={customAnswer} setCustomAnswer={setCustomAnswer} />
                   )}
                 </>
               ) : (
