@@ -84,6 +84,30 @@ export async function createPoll(formData: FormData) {
   }
 }
 
+export async function closePoll(pollId: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  const poll = await prisma.poll.findUnique({ where: { id: pollId }, select: { creatorId: true } });
+  if (poll?.creatorId !== session.user.id) throw new Error("Forbidden");
+
+  await prisma.poll.update({ where: { id: pollId }, data: { expiresAt: new Date() } });
+  revalidatePath(`/poll/${pollId}`);
+  revalidatePath("/dashboard");
+}
+
+export async function reopenPoll(pollId: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  const poll = await prisma.poll.findUnique({ where: { id: pollId }, select: { creatorId: true } });
+  if (poll?.creatorId !== session.user.id) throw new Error("Forbidden");
+
+  await prisma.poll.update({ where: { id: pollId }, data: { expiresAt: null } });
+  revalidatePath(`/poll/${pollId}`);
+  revalidatePath("/dashboard");
+}
+
 export async function deletePoll(pollId: string) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -113,6 +137,8 @@ export async function updatePollSettings(pollId: string, data: {
   hideShareButton?: boolean;
   anonymizeData?: boolean;
   allowedDomains?: string | null;
+  requireAuth?: boolean;
+  requireNames?: boolean;
 }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) throw new Error("Unauthorized");

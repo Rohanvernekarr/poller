@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui/card";
 import {
   BarChart3,
   Users,
@@ -10,10 +9,9 @@ import {
   Settings2,
   Share2,
   CheckCircle2,
-  Copy,
-  MessageSquare,
-  Mail,
   Globe,
+  Square,
+  Play,
 } from "lucide-react";
 import { Button } from "@repo/ui/button";
 import Link from "next/link";
@@ -28,9 +26,13 @@ interface PollSidebarProps {
   copied: boolean;
   onCopyLink: () => void;
   isOwner: boolean;
+  isExpired: boolean;
   onOpenSettings: () => void;
   isDeleting: boolean;
   onDelete: () => void;
+  isStoppingVoting?: boolean;
+  onStopVoting: () => void;
+  onReopenPoll: () => void;
 }
 
 export function PollSidebar({
@@ -43,9 +45,13 @@ export function PollSidebar({
   copied,
   onCopyLink,
   isOwner,
+  isExpired,
   onOpenSettings,
   isDeleting,
   onDelete,
+  isStoppingVoting,
+  onStopVoting,
+  onReopenPoll,
 }: PollSidebarProps) {
   return (
     <div className="flex flex-col gap-6 lg:sticky lg:top-24">
@@ -163,6 +169,28 @@ export function PollSidebar({
             <Settings2 className="w-3.5 h-3.5" />
             Settings
           </Button>
+
+          {isExpired ? (
+            <Button
+              onClick={onReopenPoll}
+              isLoading={isStoppingVoting}
+              variant="outline"
+              className="w-full h-10 border-border text-foreground/60 hover:text-foreground hover:bg-foreground/5 rounded-xl font-black uppercase tracking-widest text-[9px] flex items-center justify-center gap-2 transition-all"
+            >
+              <Play className="w-3.5 h-3.5" />
+              Reopen Poll
+            </Button>
+          ) : (
+            <Button
+              onClick={onStopVoting}
+              isLoading={isStoppingVoting}
+              variant="ghost"
+              className="w-full h-10 text-[9px] font-black uppercase tracking-widest text-red-500/40 hover:text-red-500 hover:bg-red-500/5 transition-all flex items-center justify-center gap-2 rounded-xl"
+            >
+              <Square className="w-3.5 h-3.5" />
+              Stop Voting
+            </Button>
+          )}
 
           <Button
             onClick={onDelete}

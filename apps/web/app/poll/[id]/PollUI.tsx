@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@repo/ui/card";
 import { Button } from "@repo/ui/button";
 import useSWR from "swr";
-import { updatePollSettings, deletePoll } from "../../actions";
+import { updatePollSettings, deletePoll, closePoll, reopenPoll } from "../../actions";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -40,6 +40,7 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
   const [customAnswer, setCustomAnswer] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isStoppingVoting, setIsStoppingVoting] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [voteSuccess, setVoteSuccess] = useState(false);
@@ -61,6 +62,16 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
   const handleUpdateSetting = async (setting: string, value: any) => {
     setIsUpdating(true);
     try { await updatePollSettings(initialPoll.id, { [setting]: value }); mutate(); } finally { setIsUpdating(false); }
+  };
+
+  const handleStopVoting = async () => {
+    setIsStoppingVoting(true);
+    try { await closePoll(initialPoll.id); mutate(); } finally { setIsStoppingVoting(false); }
+  };
+
+  const handleReopenPoll = async () => {
+    setIsStoppingVoting(true);
+    try { await reopenPoll(initialPoll.id); mutate(); } finally { setIsStoppingVoting(false); }
   };
 
   const handleVote = async () => {
@@ -194,15 +205,19 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
               copied={copied} 
               onCopyLink={() => { navigator.clipboard.writeText(window.location.href); setCopied(true); setTimeout(() => setCopied(false), 2000); }} 
               isOwner={isOwner} 
+              isExpired={isExpired}
               onOpenSettings={() => setIsSettingsOpen(true)} 
               isDeleting={isDeleting}
+              isStoppingVoting={isStoppingVoting}
+              onStopVoting={handleStopVoting}
+              onReopenPoll={handleReopenPoll}
               onDelete={() => setIsDeleteModalOpen(true)} 
             />
           </div>
         </div>
       </Card>
       {displayPoll.allowComments && <div className="mt-12"><CommentsSection pollId={displayPoll.id} /></div>}
-      <PollSettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} settings={displayPoll} onUpdate={handleUpdateSetting} isUpdating={isUpdating} />
+      <PollSettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} pollId={initialPoll.id} isExpired={isExpired} settings={{ ...displayPoll, requireAuth: displayPoll.requireAuth, requireNames: displayPoll.requireNames }} onUpdate={handleUpdateSetting} isUpdating={isUpdating} onMutate={() => mutate()} />
       <DeletePollModal 
         isOpen={isDeleteModalOpen} 
         onClose={() => setIsDeleteModalOpen(false)} 
