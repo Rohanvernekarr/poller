@@ -100,7 +100,7 @@ const sections = [
     content: [
       {
         subtitle: "Our IP",
-        body: "The Service and its original content, features, and functionality — including but not limited to the Poller name, logo, software, design, and documentation — are owned by Poller and are protected by copyright, trademark, and other intellectual property laws. No rights are granted to you except as expressly stated in these Terms.",
+        body: "The Service and its original content, features, and functionality - including but not limited to the Poller name, logo, software, design, and documentation - are owned by Poller and are protected by copyright, trademark, and other intellectual property laws. No rights are granted to you except as expressly stated in these Terms.",
       },
       {
         subtitle: "Feedback",
@@ -215,14 +215,14 @@ const sections = [
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero */}
+     
       <div className="border-b border-border bg-foreground/[0.02]">
         <div className="max-w-4xl mx-auto px-6 py-20">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-2xl bg-foreground flex items-center justify-center">
-              <FileText className="w-5 h-5 text-background" />
+            <div className="w-8 h-8 rounded-2xl bg-foreground flex items-center justify-center">
+              <FileText className="w-4 h-4 text-background" />
             </div>
-            <span className="text-[10px] font-black uppercase tracking-widest text-foreground/30 italic">
+            <span className="text-[14px] font-black uppercase tracking-widest text-foreground/30 italic">
               Legal
             </span>
           </div>

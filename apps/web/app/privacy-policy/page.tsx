@@ -26,7 +26,7 @@ const sections = [
       },
       {
         subtitle: "Authentication Data",
-        body: "When you sign in using OAuth providers (such as Google), we receive a limited set of profile information from that provider — typically your name, email address, and profile photo — in accordance with their privacy policies and your permissions.",
+        body: "When you sign in using OAuth providers (such as Google), we receive a limited set of profile information from that provider - typically your name, email address, and profile photo - in accordance with their privacy policies and your permissions.",
       },
     ],
   },
@@ -36,7 +36,7 @@ const sections = [
     content: [
       {
         subtitle: "To Provide the Service",
-        body: "We use your information to operate and deliver the core features of Poller — creating polls, recording votes, displaying results, and managing your account and dashboard.",
+        body: "We use your information to operate and deliver the core features of Poller - creating polls, recording votes, displaying results, and managing your account and dashboard.",
       },
       {
         subtitle: "To Improve the Service",
@@ -62,7 +62,7 @@ const sections = [
       },
       {
         subtitle: "Service Providers",
-        body: "We share information with trusted third-party vendors who help us operate the platform — including cloud infrastructure providers (e.g., hosting and databases), authentication services, and analytics tools. These parties are contractually bound to use your data only as directed by us.",
+        body: "We share information with trusted third-party vendors who help us operate the platform - including cloud infrastructure providers (e.g., hosting and databases), authentication services, and analytics tools. These parties are contractually bound to use your data only as directed by us.",
       },
       {
         subtitle: "Legal Requirements",
@@ -177,14 +177,14 @@ const sections = [
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero */}
+      
       <div className="border-b border-border bg-foreground/[0.02]">
         <div className="max-w-4xl mx-auto px-6 py-20">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-2xl bg-foreground flex items-center justify-center">
-              <Shield className="w-5 h-5 text-background" />
+            <div className="w-8 h-8 rounded-2xl bg-foreground flex items-center justify-center">
+              <Shield className="w-4 h-4 text-background" />
             </div>
-            <span className="text-[10px] font-black uppercase tracking-widest text-foreground/30 italic">
+            <span className="text-[14px] font-black uppercase tracking-widest text-foreground/30 italic">
               Legal
             </span>
           </div>
@@ -193,7 +193,7 @@ export default function PrivacyPage() {
           </h1>
           <p className="text-foreground/50 font-medium leading-relaxed max-w-2xl text-lg">
             We believe privacy is a fundamental right. This policy explains
-            clearly and transparently how Poller handles your data — no legalese.
+            clearly and transparently how Poller handles your data - no legalese.
           </p>
           <div className="flex flex-wrap gap-6 mt-8 text-[11px] font-black uppercase tracking-widest text-foreground/30 italic">
             <span>Effective: {EFFECTIVE_DATE}</span>
@@ -261,7 +261,7 @@ export default function PrivacyPage() {
             </p>
             <p className="font-bold text-sm text-foreground/60 leading-relaxed mb-4">
               We are committed to being transparent about how we handle your
-              data. If anything in this policy is unclear, reach out — we will
+              data. If anything in this policy is unclear, reach out - we will
               respond promptly.
             </p>
             <a
