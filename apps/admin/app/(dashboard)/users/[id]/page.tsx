@@ -16,7 +16,7 @@ export default async function AdminUserDetailPage({
   searchParams: searchParamsPromise 
 }: { 
   params: Promise<{ id: string }>,
-  searchParams: Promise<{ pPage?: string; vPage?: string }>
+  searchParams: Promise<{ pPage?: string; vPage?: string; cPage?: string }>
 }) {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
@@ -24,8 +24,9 @@ export default async function AdminUserDetailPage({
   const [{ id }, searchParams] = await Promise.all([params, searchParamsPromise]);
   const pPage = Math.max(1, Number(searchParams.pPage) || 1);
   const vPage = Math.max(1, Number(searchParams.vPage) || 1);
+  const cPage = Math.max(1, Number(searchParams.cPage) || 1);
 
-  const [user, polls, votes] = await Promise.all([
+  const [user, polls, votes, comments] = await Promise.all([
     prisma.user.findUnique({
       where: { id },
       include: {
@@ -33,6 +34,7 @@ export default async function AdminUserDetailPage({
           select: {
             polls: true,
             votes: true,
+            comments: true,
           }
         }
       }
@@ -52,6 +54,15 @@ export default async function AdminUserDetailPage({
       include: {
         poll: { select: { id: true, title: true } },
         option: { select: { text: true } }
+      }
+    }),
+    prisma.comment.findMany({
+      where: { authorId: id },
+      orderBy: { createdAt: "desc" },
+      take: PAGE_SIZE,
+      skip: (cPage - 1) * PAGE_SIZE,
+      include: {
+        poll: { select: { id: true, title: true } }
       }
     })
   ]);
@@ -76,8 +87,10 @@ export default async function AdminUserDetailPage({
           ...user,
           polls,
           votes,
+          comments,
           pPage,
           vPage,
+          cPage,
           pageSize: PAGE_SIZE
         }} 
       />
