@@ -5,7 +5,7 @@ import { formatDistanceToNow } from "date-fns";
 import { 
   User, Mail, Shield, Calendar, Activity, Vote, 
   ChevronDown, ChevronUp, Clock, ExternalLink,
-  ShieldAlert, ShieldCheck
+  ShieldAlert, ShieldCheck, MessageSquare, List
 } from "lucide-react";
 import Link from "next/link";
 import { Pagination } from "./Pagination";
@@ -17,11 +17,15 @@ interface AdminUserDetailProps {
 export function AdminUserDetail({ user }: AdminUserDetailProps) {
   const [expandPolls, setExpandPolls] = useState(true);
   const [expandVotes, setExpandVotes] = useState(true);
+  const [expandComments, setExpandComments] = useState(true);
 
   const createdPolls = user.polls || [];
   const votingHistory = user.votes || [];
+  const commentsMade = user.comments || [];
+  
   const totalPolls = user._count?.polls || 0;
   const totalVotes = user._count?.votes || 0;
+  const totalComments = user._count?.comments || 0;
 
   return (
     <div className="space-y-8">
@@ -72,8 +76,8 @@ export function AdminUserDetail({ user }: AdminUserDetailProps) {
           />
           <StatMiniCard 
             title="Comments" 
-            value={user._count?.comments ?? 0} 
-            icon={<Activity className="w-4 h-4" />} 
+            value={totalComments} 
+            icon={<MessageSquare className="w-4 h-4" />} 
           />
           <StatMiniCard 
             title="Last Active" 
@@ -181,6 +185,66 @@ export function AdminUserDetail({ user }: AdminUserDetailProps) {
               page={user.vPage} 
               pageSize={user.pageSize} 
               paramName="vPage" 
+            />
+          </div>
+        )}
+      </section>
+
+      {/* ── Comments Made ── */}
+      <section className="rounded-3xl border border-white/[0.06] overflow-hidden bg-white/[0.01]">
+        <button 
+          onClick={() => setExpandComments(!expandComments)}
+          className="w-full flex items-center justify-between px-8 py-6 bg-white/[0.03] hover:bg-white/[0.05] transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <MessageSquare className="w-5 h-5 text-gray-400" />
+            <h3 className="text-sm font-black uppercase tracking-widest text-white">Comments Made <span className="text-gray-600 ml-2">({totalComments})</span></h3>
+          </div>
+          {expandComments ? <ChevronUp className="w-5 h-5 text-gray-600" /> : <ChevronDown className="w-5 h-5 text-gray-600" />}
+        </button>
+        {expandComments && (
+          <div className="divide-y divide-white/[0.03]">
+            {commentsMade.length === 0 ? (
+              <p className="py-20 text-center text-gray-600 font-bold uppercase tracking-widest text-xs italic">User has not made any comments yet.</p>
+            ) : (
+              commentsMade.map((comment: any) => (
+                <div key={comment.id} className="px-8 py-6 hover:bg-white/[0.02] transition-colors flex flex-col md:flex-row md:items-start justify-between gap-4">
+                  <div className="space-y-3 flex-1 min-w-0">
+                    <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.06] text-sm text-gray-300 italic">
+                      "{comment.text}"
+                    </div>
+                    {comment.poll && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest">On Poll:</span>
+                        <Link href={`/polls/${comment.poll.id}`} className="text-xs font-bold text-primary hover:underline truncate">
+                          {comment.poll.title}
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-6 text-right shrink-0">
+                    <div className="flex flex-col items-end">
+                      <span className="text-xs font-bold text-gray-500 tabular-nums">{new Date(comment.createdAt).toLocaleDateString()}</span>
+                      <span className="text-[10px] font-black text-gray-700 uppercase tracking-widest">{new Date(comment.createdAt).toLocaleTimeString()}</span>
+                    </div>
+                    <Link href={`/polls/${comment.poll?.id}`}>
+                      <button className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors">
+                        <ExternalLink className="w-4 h-4 text-gray-400" />
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+        {expandComments && totalComments > user.pageSize && (
+          <div className="px-8 py-4 border-t border-white/[0.03] bg-white/[0.01]">
+            <Pagination 
+              total={totalComments} 
+              page={user.cPage} 
+              pageSize={user.pageSize} 
+              paramName="cPage" 
             />
           </div>
         )}
