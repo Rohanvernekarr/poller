@@ -9,7 +9,7 @@ import { ShieldCheck } from "lucide-react";
 
 export default function Login() {
   const [username, setUsername] = useState("admin@poller.com");
-  const [password, setPassword] = useState("supersecret");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 

@@ -25,7 +25,7 @@ export function AdminUserDetail({ user }: AdminUserDetailProps) {
 
   return (
     <div className="space-y-8">
-      {/* ── User Overview Identity ── */}
+      {/* User Overview Identity  */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 p-8 rounded-3xl bg-white/[0.03] border border-white/[0.06] flex flex-col md:flex-row gap-8 items-start md:items-center">
           <div className="w-24 h-24 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-3xl font-black text-white uppercase shrink-0">
@@ -83,7 +83,7 @@ export function AdminUserDetail({ user }: AdminUserDetailProps) {
         </div>
       </div>
 
-      {/* ── Created Polls ── */}
+      {/* Created Polls*/}
       <section className="rounded-3xl border border-white/[0.06] overflow-hidden bg-white/[0.01]">
         <button 
           onClick={() => setExpandPolls(!expandPolls)}
@@ -130,7 +130,7 @@ export function AdminUserDetail({ user }: AdminUserDetailProps) {
         )}
       </section>
 
-      {/* ── Voting History ── */}
+      {/* Voting History  */}
       <section className="rounded-3xl border border-white/[0.06] overflow-hidden bg-white/[0.01]">
         <button 
           onClick={() => setExpandVotes(!expandVotes)}
