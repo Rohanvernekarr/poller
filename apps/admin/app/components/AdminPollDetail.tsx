@@ -1,28 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition, useEffect, useRef } from "react";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import {
   Users, Clock, BarChart2, CheckCircle2, Globe, Fingerprint,
-  MessageSquare, Shield, Share2, AlarmClock, Lock, Eye,
-  Search, X, ChevronDown, ChevronUp
+  MessageSquare, Shield, Lock, Search, X, ChevronDown, ChevronUp
 } from "lucide-react";
+import { Pagination } from "./Pagination";
 
-interface AdminPollDetailProps { poll: any; }
+interface AdminPollDetailProps { 
+  poll: any;
+}
 
 export function AdminPollDetail({ poll }: AdminPollDetailProps) {
-  const [search, setSearch] = useState("");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
+  const [search, setSearch] = useState(poll.vSearch || "");
   const [expandedOptions, setExpandedOptions] = useState(true);
+  const isFirstRender = useRef(true);
 
-  const filtered = poll.votes.filter((v: any) => {
-    const q = search.toLowerCase();
-    return (
-      (v.voterName || "").toLowerCase().includes(q) ||
-      (v.user?.email || "").toLowerCase().includes(q) ||
-      (v.option?.text || "").toLowerCase().includes(q) ||
-      (v.ipAddress || "").toLowerCase().includes(q)
-    );
-  });
+  const votes = poll.votes || [];
+  const totalVotesCount = poll.totalVotesCount || 0;
+  const vPage = poll.vPage || 1;
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    const timeout = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (search) params.set("vSearch", search);
+      else params.delete("vSearch");
+      params.set("vPage", "1");
+      startTransition(() => {
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+      });
+    }, 400);
+    return () => clearTimeout(timeout);
+  }, [search, pathname, router]);
 
   const isExpired = poll.expiresAt && new Date() > new Date(poll.expiresAt);
 
@@ -119,7 +138,11 @@ export function AdminPollDetail({ poll }: AdminPollDetailProps) {
             <span className="text-gray-600">({poll.votes.length})</span>
           </span>
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-600" />
+            {isPending ? (
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 animate-pulse" />
+            ) : (
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-600" />
+            )}
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
@@ -127,7 +150,10 @@ export function AdminPollDetail({ poll }: AdminPollDetailProps) {
               className="h-8 pl-8 pr-7 w-44 rounded-lg bg-white/5 border border-white/10 text-xs text-gray-300 placeholder:text-gray-600 focus:outline-none focus:border-white/20 transition-all"
             />
             {search && (
-              <button onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-300">
+              <button 
+                onClick={() => setSearch("")} 
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-300"
+              >
                 <X className="w-3.5 h-3.5" />
               </button>
             )}
@@ -140,22 +166,24 @@ export function AdminPollDetail({ poll }: AdminPollDetailProps) {
         </div>
 
         <div className="max-h-[520px] overflow-y-auto divide-y divide-white/[0.03]">
-          {filtered.length === 0 ? (
-            <p className="text-center py-10 text-gray-600 text-xs font-black uppercase tracking-widest">No results.</p>
+          {votes.length === 0 ? (
+            <p className="text-center py-10 text-gray-600 text-xs font-black uppercase tracking-widest">
+              {search ? "No matching voters found." : "No votes recorded yet."}
+            </p>
           ) : (
-            filtered.map((vote: any, i: number) => (
+            votes.map((vote: any, i: number) => (
               <div
                 key={vote.id}
                 className="grid grid-cols-[2rem_1fr_1fr_1fr_1fr_auto] gap-4 items-center px-4 py-2.5 hover:bg-white/[0.03] transition-colors text-xs"
               >
-                <span className="text-gray-600 tabular-nums text-[10px]">{i + 1}</span>
+                <span className="text-gray-600 tabular-nums text-[10px]">
+                  {(vPage - 1) * 50 + i + 1}
+                </span>
 
-                {/* Voter name */}
                 <div className="min-w-0">
                   <p className="text-gray-200 font-semibold truncate">{vote.voterName || "Anonymous"}</p>
                 </div>
 
-                {/* Account */}
                 <div className="min-w-0">
                   {vote.user ? (
                     <div>
@@ -167,10 +195,8 @@ export function AdminPollDetail({ poll }: AdminPollDetailProps) {
                   )}
                 </div>
 
-                {/* Option voted for */}
                 <span className="text-gray-300 truncate">{vote.option?.text}</span>
 
-                {/* IP & fingerprint */}
                 <div className="space-y-0.5 min-w-0">
                   {vote.ipAddress && vote.ipAddress !== "Redacted" ? (
                     <p className="text-gray-500 font-mono text-[10px] truncate flex items-center gap-1">
@@ -186,7 +212,6 @@ export function AdminPollDetail({ poll }: AdminPollDetailProps) {
                   )}
                 </div>
 
-                {/* Time */}
                 <span className="text-gray-600 text-[10px] whitespace-nowrap tabular-nums">
                   {formatDistanceToNow(new Date(vote.createdAt), { addSuffix: true })}
                 </span>
@@ -195,11 +220,14 @@ export function AdminPollDetail({ poll }: AdminPollDetailProps) {
           )}
         </div>
 
-        {search && (
-          <div className="px-5 py-3 border-t border-white/[0.04] text-[10px] font-black uppercase tracking-widest text-gray-600">
-            {filtered.length} of {poll.votes.length} votes
-          </div>
-        )}
+        <div className="px-5 py-4 border-t border-white/[0.06] bg-white/[0.01]">
+          <Pagination 
+            total={totalVotesCount} 
+            page={vPage} 
+            pageSize={50} 
+            paramName="vPage" 
+          />
+        </div>
       </div>
     </div>
   );

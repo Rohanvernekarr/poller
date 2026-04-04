@@ -8,6 +8,7 @@ import {
   ShieldAlert, ShieldCheck
 } from "lucide-react";
 import Link from "next/link";
+import { Pagination } from "./Pagination";
 
 interface AdminUserDetailProps {
   user: any;
@@ -19,6 +20,8 @@ export function AdminUserDetail({ user }: AdminUserDetailProps) {
 
   const createdPolls = user.polls || [];
   const votingHistory = user.votes || [];
+  const totalPolls = user._count?.polls || 0;
+  const totalVotes = user._count?.votes || 0;
 
   return (
     <div className="space-y-8">
@@ -59,12 +62,12 @@ export function AdminUserDetail({ user }: AdminUserDetailProps) {
         <div className="grid grid-cols-2 gap-4">
           <StatMiniCard 
             title="Polls Created" 
-            value={createdPolls.length} 
+            value={totalPolls} 
             icon={<Shield className="w-4 h-4" />} 
           />
           <StatMiniCard 
             title="Votes Cast" 
-            value={votingHistory.length} 
+            value={totalVotes} 
             icon={<Vote className="w-4 h-4" />} 
           />
           <StatMiniCard 
@@ -88,7 +91,7 @@ export function AdminUserDetail({ user }: AdminUserDetailProps) {
         >
           <div className="flex items-center gap-3">
             <Shield className="w-5 h-5 text-gray-400" />
-            <h3 className="text-sm font-black uppercase tracking-widest text-white">Polls Authored <span className="text-gray-600 ml-2">({createdPolls.length})</span></h3>
+            <h3 className="text-sm font-black uppercase tracking-widest text-white">Polls Authored <span className="text-gray-600 ml-2">({totalPolls})</span></h3>
           </div>
           {expandPolls ? <ChevronUp className="w-5 h-5 text-gray-600" /> : <ChevronDown className="w-5 h-5 text-gray-600" />}
         </button>
@@ -115,6 +118,16 @@ export function AdminUserDetail({ user }: AdminUserDetailProps) {
             )}
           </div>
         )}
+        {expandPolls && totalPolls > user.pageSize && (
+          <div className="px-8 py-4 border-t border-white/[0.03] bg-white/[0.01]">
+            <Pagination 
+              total={totalPolls} 
+              page={user.pPage} 
+              pageSize={user.pageSize} 
+              paramName="pPage" 
+            />
+          </div>
+        )}
       </section>
 
       {/* ── Voting History ── */}
@@ -125,7 +138,7 @@ export function AdminUserDetail({ user }: AdminUserDetailProps) {
         >
           <div className="flex items-center gap-3">
             <Vote className="w-5 h-5 text-gray-400" />
-            <h3 className="text-sm font-black uppercase tracking-widest text-white">Voting History <span className="text-gray-600 ml-2">({votingHistory.length})</span></h3>
+            <h3 className="text-sm font-black uppercase tracking-widest text-white">Voting History <span className="text-gray-600 ml-2">({totalVotes})</span></h3>
           </div>
           {expandVotes ? <ChevronUp className="w-5 h-5 text-gray-600" /> : <ChevronDown className="w-5 h-5 text-gray-600" />}
         </button>
@@ -159,6 +172,16 @@ export function AdminUserDetail({ user }: AdminUserDetailProps) {
                 </div>
               ))
             )}
+          </div>
+        )}
+        {expandVotes && totalVotes > user.pageSize && (
+          <div className="px-8 py-4 border-t border-white/[0.03] bg-white/[0.01]">
+            <Pagination 
+              total={totalVotes} 
+              page={user.vPage} 
+              pageSize={user.pageSize} 
+              paramName="vPage" 
+            />
           </div>
         )}
       </section>
