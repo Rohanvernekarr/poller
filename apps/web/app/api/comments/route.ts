@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@repo/db";
 
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]/route";
+
 export async function POST(req: NextRequest) {
   try {
     const { pollId, text, authorName } = await req.json();
@@ -9,11 +12,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing pollId or text" }, { status: 400 });
     }
 
+    const session = await getServerSession(authOptions);
+    const authorId = session?.user?.id || null;
+
     const comment = await prisma.comment.create({
       data: {
         pollId,
         text: text.trim(),
         authorName: authorName ? authorName.trim() : null,
+        authorId,
       }
     });
 
