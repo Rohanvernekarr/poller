@@ -11,7 +11,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         const adminEmail = process.env.ADMIN_EMAIL || "admin@poller.com";
-        const adminPassword = process.env.ADMIN_PASSWORD || "supersecret";
+        const adminPassword = process.env.ADMIN_PASSWORD || "";
 
         if (
           credentials?.username === adminEmail &&
@@ -24,11 +24,11 @@ export const authOptions: NextAuthOptions = {
 
           if (dbUser && dbUser.role === "ADMIN") {
             if (dbUser.isBlocked) return null;
-            return { 
-              id: dbUser.id, 
-              name: dbUser.name || "Admin", 
-              email: dbUser.email, 
-              role: dbUser.role 
+            return {
+              id: dbUser.id,
+              name: dbUser.name || "Admin",
+              email: dbUser.email,
+              role: dbUser.role
             };
           }
 
