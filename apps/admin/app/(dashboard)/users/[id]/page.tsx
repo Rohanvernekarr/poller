@@ -7,35 +7,54 @@ import { UserNav } from "../../../components/UserNav";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
-export default async function AdminUserDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export const dynamic = "force-dynamic";
+
+const PAGE_SIZE = 20; // Smaller page size because we have two tables
+
+export default async function AdminUserDetailPage({ 
+  params, 
+  searchParams: searchParamsPromise 
+}: { 
+  params: Promise<{ id: string }>,
+  searchParams: Promise<{ pPage?: string; vPage?: string }>
+}) {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
 
-  const { id } = await params;
+  const [{ id }, searchParams] = await Promise.all([params, searchParamsPromise]);
+  const pPage = Math.max(1, Number(searchParams.pPage) || 1);
+  const vPage = Math.max(1, Number(searchParams.vPage) || 1);
 
-  const user = await prisma.user.findUnique({
-    where: { id },
-    include: {
-      polls: {
-        orderBy: { createdAt: "desc" },
-        include: { _count: { select: { votes: true } } }
-      },
-      votes: {
-        orderBy: { createdAt: "desc" },
-        include: {
-          poll: { select: { id: true, title: true } },
-          option: { select: { text: true } }
-        }
-      },
-      _count: {
-        select: {
-          polls: true,
-          votes: true,
-          comments: true
+  const [user, polls, votes] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id },
+      include: {
+        _count: {
+          select: {
+            polls: true,
+            votes: true,
+          }
         }
       }
-    }
-  });
+    }),
+    prisma.poll.findMany({
+      where: { creatorId: id },
+      orderBy: { createdAt: "desc" },
+      take: PAGE_SIZE,
+      skip: (pPage - 1) * PAGE_SIZE,
+      include: { _count: { select: { votes: true } } }
+    }),
+    prisma.vote.findMany({
+      where: { userId: id },
+      orderBy: { createdAt: "desc" },
+      take: PAGE_SIZE,
+      skip: (vPage - 1) * PAGE_SIZE,
+      include: {
+        poll: { select: { id: true, title: true } },
+        option: { select: { text: true } }
+      }
+    })
+  ]);
 
   if (!user) notFound();
 
@@ -52,7 +71,16 @@ export default async function AdminUserDetailPage({ params }: { params: Promise<
         <UserNav />
       </header>
 
-      <AdminUserDetail user={user} />
+      <AdminUserDetail 
+        user={{
+          ...user,
+          polls,
+          votes,
+          pPage,
+          vPage,
+          pageSize: PAGE_SIZE
+        }} 
+      />
     </div>
   );
 }
