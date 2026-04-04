@@ -10,7 +10,7 @@ export function FeaturesGrid() {
         <p className="text-xs text-foreground/60 font-medium">Real-time charts as votes arrive.</p>
       </div>
       <div className="flex flex-col gap-2">
-        <h3 className="font-black uppercase tracking-widest text-[10px] text-foreground/80 italic">Protection</h3>
+        <h3 className="font-black uppercase tracking-widest text-[10px] text-foreground/80 italic">Security</h3>
         <p className="text-xs text-foreground/60 font-medium">Advanced fingerprinting prevents spam.</p>
       </div>
     </div>
