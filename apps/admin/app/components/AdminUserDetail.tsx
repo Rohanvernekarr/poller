@@ -5,7 +5,8 @@ import { formatDistanceToNow } from "date-fns";
 import { 
   User, Mail, Shield, Calendar, Activity, Vote, 
   ChevronDown, ChevronUp, Clock, ExternalLink,
-  ShieldAlert, ShieldCheck, MessageSquare, List
+  ShieldAlert, ShieldCheck, MessageSquare, List,
+  Monitor
 } from "lucide-react";
 import Link from "next/link";
 import { Pagination } from "./Pagination";
@@ -60,6 +61,17 @@ export function AdminUserDetail({ user }: AdminUserDetailProps) {
                 <Calendar className="w-3 h-3" /> Joined {formatDistanceToNow(new Date(user.createdAt), { addSuffix: true })}
               </span>
             </div>
+          </div>
+          <div className="shrink-0">
+            <a 
+              href={`https://us.posthog.com/project/${process.env.NEXT_PUBLIC_POSTHOG_PROJECT_ID}/person/${user.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all group scale-95 hover:scale-100 active:scale-95"
+            >
+              <Monitor className="w-4 h-4 text-primary group-hover:animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-white">Inspect Telemetry</span>
+            </a>
           </div>
         </div>
 
