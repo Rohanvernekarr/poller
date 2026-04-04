@@ -9,32 +9,30 @@ import { Vote, Activity, Users, Settings, ShieldAlert } from "lucide-react";
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
-  
-  if (!session) {
-    redirect("/login");
-  }
+  if (!session) redirect("/login");
 
-  const [polls, users, totalAccounts, totalSessions] = await Promise.all([
-    prisma.poll.findMany({
-      orderBy: { createdAt: "desc" },
-      include: {
-        _count: { select: { votes: true } },
-        votes: { select: { id: true, ipAddress: true } }
-      }
-    }),
-    prisma.user.findMany({ take: 5, orderBy: { createdAt: "desc" } }),
-    prisma.account.count(),
+  const [totalPolls, totalVotes, totalUsers, totalSessions, recentUsers, suspiciousPolls] = await Promise.all([
+    prisma.poll.count(),
+    prisma.vote.count(),
+    prisma.user.count(),
     prisma.session.count(),
+    prisma.user.findMany({ take: 5, orderBy: { createdAt: "desc" }, select: { id: true, name: true, email: true, createdAt: true } }),
+    prisma.$queryRaw<{ id: string; title: string; score: number }[]>`
+      SELECT p.id, p.title,
+        GREATEST(0, 100 - ROUND(
+          COUNT(DISTINCT v."ipAddress")::numeric / NULLIF(COUNT(v.id), 0) * 100
+        )) AS score
+      FROM "Poll" p
+      JOIN "Vote" v ON v."pollId" = p.id
+      WHERE p."allowMultipleVotes" = false
+      GROUP BY p.id, p.title
+      HAVING GREATEST(0, 100 - ROUND(
+        COUNT(DISTINCT v."ipAddress")::numeric / NULLIF(COUNT(v.id), 0) * 100
+      )) > 20
+      ORDER BY score DESC
+      LIMIT 5
+    `,
   ]);
-
-  const totalVotes = polls.reduce((acc: number, poll: any) => acc + poll._count.votes, 0);
-  const suspiciousPolls = polls.map((poll: any) => {
-    const uniqueIps = new Set(poll.votes.map((v: any) => v.ipAddress)).size;
-    const score = poll._count.votes > 0 
-      ? Math.max(0, 100 - Math.round((uniqueIps / poll._count.votes) * 100))
-      : 0;
-    return { ...poll, suspiciousScore: score };
-  }).filter(p => !p.allowMultipleVotes && p.suspiciousScore > 20);
 
   return (
     <div className="space-y-12">
@@ -43,15 +41,13 @@ export default async function AdminDashboard() {
           <h1 className="text-4xl font-black text-white uppercase tracking-tighter">Overview</h1>
           <p className="text-gray-500 font-medium">Platform-wide activity and security metrics.</p>
         </div>
-        <div className="flex items-center gap-4">
-          <UserNav />
-        </div>
+        <UserNav />
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard title="Total Polls" value={polls.length} icon={Vote} color="blue" />
+        <StatCard title="Total Polls" value={totalPolls} icon={Vote} color="blue" />
         <StatCard title="Total Votes" value={totalVotes} icon={Activity} color="pink" />
-        <StatCard title="Total Users" value={users.length} icon={Users} color="indigo" />
+        <StatCard title="Total Users" value={totalUsers} icon={Users} color="indigo" />
         <StatCard title="Total Sessions" value={totalSessions} icon={Settings} color="amber" />
       </div>
 
@@ -65,14 +61,14 @@ export default async function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {suspiciousPolls.slice(0, 5).map(p => (
+              {suspiciousPolls.map((p) => (
                 <div key={p.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 hover:border-white/10 transition-all group">
                   <div className="flex flex-col">
                     <span className="text-sm font-bold text-white truncate max-w-[250px]">{p.title}</span>
                     <span className="text-[10px] text-gray-500 font-black uppercase tracking-widest">Potential Bot Voting</span>
                   </div>
                   <span className="text-xs font-black text-red-400 bg-red-400/10 px-3 py-1 rounded-full border border-red-400/20 group-hover:scale-105 transition-transform">
-                    {p.suspiciousScore}% DUPLICATES
+                    {Number(p.score)}% Duplicates
                   </span>
                 </div>
               ))}
@@ -97,7 +93,7 @@ export default async function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {users.map(u => (
+              {recentUsers.map((u) => (
                 <div key={u.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/10 transition-colors">
                   <div className="flex flex-col">
                     <span className="text-sm font-bold text-white">{u.name || "Anonymous User"}</span>
