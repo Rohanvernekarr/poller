@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
 import { Button } from "@repo/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Mail } from "lucide-react";
+import Link from "next/link";
 
 function SignInForm() {
   const router = useRouter();
@@ -65,7 +65,7 @@ function SignInForm() {
                 <div className="w-full border-t border-zinc-800" />
               </div>
               <div className="relative flex justify-center text-[8px] uppercase tracking-[0.4em] font-black">
-                <span className="bg-black px-6 text-zinc-700">or use email</span>
+                <span className="bg-black px-6 text-zinc-600">or use email</span>
               </div>
             </div>
 
@@ -92,9 +92,12 @@ function SignInForm() {
             </form>
           </div>
           
-          <div className="pt-6 border-t border-zinc-900">
+          <div className="pt-6 border-t border-zinc-900 space-y-4">
+             <p className="text-center text-[11px] text-zinc-500 uppercase tracking-widest leading-relaxed">
+               By signing in, you agree to our <Link href="/terms-of-use" className="underline hover:text-white transition-colors">Terms of Use</Link> and <Link href="/privacy-policy" className="underline hover:text-white transition-colors">Privacy Policy</Link>.
+             </p>
              <p className="text-center text-[10px] text-zinc-700 uppercase tracking-widest font-bold">
-               Zero analytics • Privacy first
+               Private by Design • Privacy first
              </p>
           </div>
         </div>
