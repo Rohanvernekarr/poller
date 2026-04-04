@@ -33,8 +33,8 @@ export function Footer() {
         <div className="space-y-6">
           <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground/30 italic">Legal</h4>
           <ul className="space-y-4">
-            <FooterLink text="Privacy" href="/privacy" />
-            <FooterLink text="Terms" href="/terms" />
+            <FooterLink text="Privacy" href="/privacy-policy" />
+            <FooterLink text="Terms" href="/terms-of-use" />
           </ul>
         </div>
       </div>
