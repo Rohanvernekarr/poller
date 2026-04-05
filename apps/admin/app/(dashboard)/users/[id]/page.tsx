@@ -69,6 +69,14 @@ export default async function AdminUserDetailPage({
 
   if (!user) notFound();
 
+  // Calculate Last Active from the most recent activity across all sources
+  const lastActiveAt = new Date(Math.max(
+    new Date(user.updatedAt).getTime(),
+    polls[0]?.createdAt.getTime() || 0,
+    votes[0]?.createdAt.getTime() || 0,
+    comments[0]?.createdAt.getTime() || 0
+  ));
+
   return (
     <div className="space-y-8">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -91,6 +99,7 @@ export default async function AdminUserDetailPage({
           pPage,
           vPage,
           cPage,
+          lastActiveAt,
           pageSize: PAGE_SIZE
         }} 
       />

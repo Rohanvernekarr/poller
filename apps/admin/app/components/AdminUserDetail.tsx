@@ -93,7 +93,7 @@ export function AdminUserDetail({ user }: AdminUserDetailProps) {
           />
           <StatMiniCard 
             title="Last Active" 
-            value="Today" 
+            value={user.lastActiveAt ? formatDistanceToNow(new Date(user.lastActiveAt), { addSuffix: true }) : "Unknown"} 
             icon={<Clock className="w-4 h-4" />} 
           />
         </div>
