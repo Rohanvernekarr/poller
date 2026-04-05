@@ -37,7 +37,7 @@ export function UsersManager({ users: initialUsers }: UsersManagerProps) {
     if (user.isBlocked) return "BLOCKED";
     
     const lastActiveAt = Math.max(
-      new Date(user.updatedAt).getTime(),
+      new Date(user.createdAt).getTime(),
       user.polls?.[0] ? new Date(user.polls[0].createdAt).getTime() : 0,
       user.votes?.[0] ? new Date(user.votes[0].createdAt).getTime() : 0,
       user.comments?.[0] ? new Date(user.comments[0].createdAt).getTime() : 0

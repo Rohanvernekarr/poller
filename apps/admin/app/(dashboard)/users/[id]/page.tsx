@@ -69,9 +69,8 @@ export default async function AdminUserDetailPage({
 
   if (!user) notFound();
 
-  // Calculate Last Active from the most recent activity across all sources
   const lastActiveAt = new Date(Math.max(
-    new Date(user.updatedAt).getTime(),
+    new Date(user.createdAt).getTime(),
     polls[0]?.createdAt.getTime() || 0,
     votes[0]?.createdAt.getTime() || 0,
     comments[0]?.createdAt.getTime() || 0
