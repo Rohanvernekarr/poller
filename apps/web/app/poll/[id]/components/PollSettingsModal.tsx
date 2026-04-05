@@ -204,7 +204,7 @@ export function PollSettingsModal({ isOpen, onClose, pollId, isExpired, settings
                 disabled={isUpdating}
               />
 
-              {/* ── Poll Status ── */}
+              {/* Poll Status */}
               <SectionLabel className="pt-8">Poll Status</SectionLabel>
               <div className="rounded-2xl border border-red-500/10 bg-red-500/[0.03] p-4 space-y-3">
                 <div>

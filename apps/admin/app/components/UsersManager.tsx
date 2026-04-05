@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@repo/ui/table";
 import { Button } from "@repo/ui/button";
-import { Settings, ShieldAlert, ShieldCheck, ExternalLink } from "lucide-react";
+import { Settings, ShieldAlert, ShieldCheck, ExternalLink, Clock } from "lucide-react";
 import { EditUserModal } from "./EditUserModal";
 import Link from "next/link";
 
@@ -13,8 +13,12 @@ interface User {
   email: string | null;
   role: string;
   isBlocked: boolean;
-  createdAt: Date;
+  createdAt: string | Date;
+  updatedAt: string | Date;
   _count: { polls: number };
+  polls?: { createdAt: string | Date }[];
+  votes?: { createdAt: string | Date }[];
+  comments?: { createdAt: string | Date }[];
 }
 
 interface UsersManagerProps {
@@ -28,6 +32,20 @@ export function UsersManager({ users: initialUsers }: UsersManagerProps) {
   useEffect(() => {
     setUsers(initialUsers);
   }, [initialUsers]);
+  
+  const getStatus = (user: User) => {
+    if (user.isBlocked) return "BLOCKED";
+    
+    const lastActiveAt = Math.max(
+      new Date(user.updatedAt).getTime(),
+      user.polls?.[0] ? new Date(user.polls[0].createdAt).getTime() : 0,
+      user.votes?.[0] ? new Date(user.votes[0].createdAt).getTime() : 0,
+      user.comments?.[0] ? new Date(user.comments[0].createdAt).getTime() : 0
+    );
+
+    const isInactive = Date.now() - lastActiveAt > 12 * 60 * 60 * 1000;
+    return isInactive ? "INACTIVE" : "ACTIVE";
+  };
 
   const handleToggleBlock = async (user: User) => {
     const newStatus = !user.isBlocked;
@@ -74,10 +92,20 @@ export function UsersManager({ users: initialUsers }: UsersManagerProps) {
                   {user._count?.polls ?? 0}
                 </TableCell>
                 <TableCell>
-                  <div className={`flex items-center gap-2 text-xs font-bold ${user.isBlocked ? "text-red-400" : "text-green-400"}`}>
-                    {user.isBlocked ? <ShieldAlert className="w-3.5 h-3.5" /> : <ShieldCheck className="w-3.5 h-3.5" />}
-                    <span className="uppercase tracking-tighter">{user.isBlocked ? "Blocked" : "Active"}</span>
-                  </div>
+                  {(() => {
+                    const status = getStatus(user);
+                    return (
+                      <div className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest ${
+                        status === "BLOCKED" ? "text-red-400" : 
+                        status === "INACTIVE" ? "text-blue-500" : "text-green-400"
+                      }`}>
+                        {status === "BLOCKED" && <ShieldAlert className="w-3 h-3" />}
+                        {status === "ACTIVE" && <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />}
+                        {status === "INACTIVE" && <Clock className="w-3 h-3" />}
+                        <span className="tracking-tighter">{status}</span>
+                      </div>
+                    );
+                  })()}
                 </TableCell>
                 <TableCell className="text-right px-6">
                   <div className="flex justify-end gap-2">

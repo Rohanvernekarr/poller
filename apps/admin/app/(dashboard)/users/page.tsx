@@ -48,7 +48,11 @@ export default async function UsersPage({ searchParams: searchParamsPromise }: P
         role: true,
         isBlocked: true,
         createdAt: true,
+        updatedAt: true,
         _count: { select: { polls: true } },
+        polls: { orderBy: { createdAt: "desc" }, take: 1, select: { createdAt: true } },
+        votes: { orderBy: { createdAt: "desc" }, take: 1, select: { createdAt: true } },
+        comments: { orderBy: { createdAt: "desc" }, take: 1, select: { createdAt: true } },
       },
     }),
   ]);
