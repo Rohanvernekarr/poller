@@ -154,8 +154,8 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
                     <h2 className="text-xl sm:text-3xl font-black uppercase italic">Vote Received!</h2>
                     <p className="text-sm sm:text-lg text-foreground/60 font-medium">Your choice has been recorded.</p>
                   </div>
-                  <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-xs sm:max-w-sm">
-                    <Button onClick={() => { setVoteSuccess(false); setHasVoted(true); }} size="lg" className="w-full bg-foreground text-background font-black uppercase tracking-widest h-12 sm:h-14 rounded-xl sm:rounded-2xl shadow-xl hover:opacity-90 transition-all text-xs sm:text-sm">Show Results</Button>
+                  <div className="sm:flex-row items-center gap-4 w-full max-w-xs sm:max-w-sm">
+                    <Button onClick={() => { setVoteSuccess(false); setHasVoted(true); }} size="lg" className="w-full bg-foreground text-background font-black uppercase tracking-widest h-12 sm:h-14 rounded-xl sm:rounded-2xl shadow-xl hover:opacity-90 transition-all text-xs sm:text-sm">View Results</Button>
                     {(displayPoll.allowMultipleVotes && !isExpired) && (
                       <Button onClick={() => { setVoteSuccess(false); setSelectedOptionId(null); }} variant="outline" size="lg" className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl font-black uppercase tracking-widest border-foreground/10 hover:border-foreground transition-all text-xs sm:text-sm">Vote Again</Button>
                     )}
