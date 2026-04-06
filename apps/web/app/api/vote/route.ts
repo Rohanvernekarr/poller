@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     // IP & User Agent
     const ip = req.headers.get("x-forwarded-for") ?? "unknown";
     const userAgent = req.headers.get("user-agent") ?? "unknown";
-    const serverHash = generateServerFingerprint(ip, userAgent);
+    const serverHash = await generateServerFingerprint(ip, userAgent);
     const fingerprintHash = fingerprintClient || serverHash;
 
     const hasVotedCookie = req.cookies.get(`voted_${pollId}`);
