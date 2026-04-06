@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@repo/ui/button";
-import { Users, CheckCircle2, ArrowRight } from "lucide-react";
+import { Users, CheckCircle2, ArrowRight, Clock } from "lucide-react";
 import Link from "next/link";
 
 export function VotedPollCard({ vote, poll, view }: { vote: any; poll: any; view: "grid" | "list" }) {
@@ -15,8 +15,9 @@ export function VotedPollCard({ vote, poll, view }: { vote: any; poll: any; view
           <p className="text-sm font-black uppercase tracking-tight italic truncate" title={poll.title}>{poll.title}</p>
           <p className="text-[9px] font-black uppercase tracking-widest text-foreground/30 mt-0.5">Voted: {vote.option.text}</p>
         </div>
-        <div className="hidden sm:flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-foreground/30 flex-shrink-0">
+        <div className="hidden md:flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-foreground/30 flex-shrink-0">
           <span className="flex items-center gap-1.5"><Users className="w-3 h-3" />{totalVotes} votes</span>
+          <span className="flex items-center gap-1.5"><Clock className="w-3 h-3" />{new Date(vote.createdAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}</span>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           <Link href={`/poll/${poll.id}`}>
@@ -45,7 +46,13 @@ export function VotedPollCard({ vote, poll, view }: { vote: any; poll: any; view
           </div>
         </div>
         <div className="p-3.5 bg-foreground/[0.03] rounded-2xl border border-foreground/[0.06]">
-          <p className="text-[9px] font-black uppercase tracking-widest text-foreground/30 mb-2">Your Vote</p>
+          <div className="flex justify-between items-center mb-2">
+            <p className="text-[9px] font-black uppercase tracking-widest text-foreground/30">Your Vote</p>
+            <p className="text-[9px] font-black uppercase tracking-widest text-foreground/30 flex items-center gap-1 italic">
+              <Clock className="w-2.5 h-2.5" />
+              {new Date(vote.createdAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}
+            </p>
+          </div>
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0">
               <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />

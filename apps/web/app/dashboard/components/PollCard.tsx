@@ -23,7 +23,7 @@ export function PollCard({ poll, isDeleting, onDelete, view }: { poll: any; isDe
         {/* Meta */}
         <div className="hidden sm:flex items-center gap-6 text-[10px] font-black uppercase tracking-widest text-foreground/40 flex-shrink-0">
           <span className="flex items-center gap-1.5"><Users className="w-3 h-3" />{totalVotes}</span>
-          <span className="flex items-center gap-1.5"><Clock className="w-3 h-3" />{new Date(poll.createdAt).toLocaleDateString()}</span>
+          <span className="flex items-center gap-1.5"><Clock className="w-3 h-3" />{new Date(poll.createdAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}</span>
           {isExpired && <span className="text-foreground/20">Ended</span>}
         </div>
 
@@ -64,7 +64,7 @@ export function PollCard({ poll, isDeleting, onDelete, view }: { poll: any; isDe
             </div>
             <div className="flex items-center gap-3 text-[9px] font-black text-foreground/40 uppercase tracking-widest">
               <span className="flex items-center gap-1"><Users className="w-2.5 h-2.5" />{totalVotes} votes</span>
-              <span className="flex items-center gap-1"><Clock className="w-2.5 h-2.5" />{new Date(poll.createdAt).toLocaleDateString()}</span>
+              <span className="flex items-center gap-1"><Clock className="w-2.5 h-2.5" />{new Date(poll.createdAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}</span>
             </div>
           </div>
           <Button
