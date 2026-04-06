@@ -58,3 +58,12 @@
     background-color: hsl(var(--surface) / 0.7);
   }
 }
+
+@media print {
+  @page {
+    margin: 0;
+  }
+  body {
+    padding: 0.2cm !important;
+  }
+}
