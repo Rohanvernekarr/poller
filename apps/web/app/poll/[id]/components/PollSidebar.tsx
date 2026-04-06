@@ -92,7 +92,7 @@ export function PollSidebar({
             <div className="flex items-center justify-between p-3 rounded-xl bg-foreground/[0.02] border border-border/50">
               <div className="flex items-center gap-2.5 text-foreground/40 italic">
                 <Clock className="w-3.5 h-3.5" />
-                <span className="text-[10px] font-black uppercase tracking-widest leading-none pt-0.5">Date</span>
+                <span className="text-[10px] font-black uppercase tracking-widest leading-none pt-0.5">Created</span>
               </div>
               <span className="text-[11px] font-black uppercase tracking-tight italic">{createdAtFormatted}</span>
             </div>

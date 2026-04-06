@@ -56,7 +56,7 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
     (url: string) => fetch(url).then(res => res.json()), { refreshInterval: 3000, fallbackData: initialPoll });
 
   const displayPoll = pollData || initialPoll;
-  const createdAtFormatted = initialPoll.createdAt ? new Date(initialPoll.createdAt).toLocaleDateString() : "recently";
+  const createdAtFormatted = initialPoll.createdAt ? new Date(initialPoll.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : "recently";
   const isExpired = !!displayPoll.expiresAt && new Date() > new Date(displayPoll.expiresAt);
 
   const handleUpdateSetting = async (setting: string, value: any) => {
@@ -127,7 +127,7 @@ export function PollUI({ initialPoll, hasVotedInitial, isOwner }: { initialPoll:
       <Card className="glass border-border sm:border shadow-2xl rounded-none sm:rounded-[2rem] overflow-hidden bg-background/50 backdrop-blur-sm border-x-0 sm:border-x">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
           <div className="lg:col-span-8 p-5 sm:p-10 border-b lg:border-b-0 lg:border-r border-border">
-            <div className="mb-8 flex justify-between items-start">
+            <div className="mb-8 flex justify-between items-start">             
               <div>
                 <h1 className="text-2xl md:text-5xl font-black tracking-tight mb-3 leading-tight uppercase italic">{displayPoll.title}</h1>
                 {displayPoll.description && <p className="text-base md:text-lg text-foreground/60 font-medium leading-relaxed">{displayPoll.description}</p>}
