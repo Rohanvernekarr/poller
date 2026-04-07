@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Settings2, MessageSquare, Eye, Copy, Globe, ShieldCheck, UserCheck, Mail, Square, Play } from "lucide-react";
 import { Button } from "@repo/ui/button";
-import { closePoll, reopenPoll } from "../../../actions";
+import { closePoll, reopenPoll } from "../../../utils/actions";
 
 interface SettingsData {
   allowComments?: boolean;

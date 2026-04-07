@@ -3,7 +3,7 @@
 import { prisma } from "@repo/db";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 import { revalidatePath } from "next/cache";
 
 export async function createPoll(formData: FormData) {
@@ -21,7 +21,7 @@ export async function createPoll(formData: FormData) {
   const resultsVisibility = (formData.get("resultsVisibility") || "PUBLIC") as string;
   const allowedDomains = formData.get("allowedDomains") as string | null;
   const requireAuth = formData.get("requireAuth") === "true";
-  
+
   const expireDate = formData.get("expireDate") as string | null;
   const expireTime = formData.get("expireTime") as string | null;
 
@@ -163,7 +163,7 @@ export async function updatePollSettings(pollId: string, data: {
 
 export async function getPollResults(pollId: string) {
   const session = await getServerSession(authOptions);
-  
+
   const poll = await prisma.poll.findUnique({
     where: { id: pollId },
     include: {

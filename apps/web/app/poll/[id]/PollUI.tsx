@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@repo/ui/card";
 import { Button } from "@repo/ui/button";
 import useSWR from "swr";
-import { updatePollSettings, deletePoll, closePoll, reopenPoll } from "../../actions";
+import { updatePollSettings, deletePoll, closePoll, reopenPoll } from "../../utils/actions";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";

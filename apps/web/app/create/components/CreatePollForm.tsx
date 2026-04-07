@@ -6,7 +6,7 @@ import { Button } from "@repo/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@repo/ui/card";
 import { Input } from "@repo/ui/input";
 import { Plus, Trash2, ArrowRight, Settings2, ChevronDown, AlertCircle, CalendarClock, Lock } from "lucide-react";
-import { createPoll } from "../../actions";
+import { createPoll } from "../../utils/actions";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { TechnicalBackButton } from "../../components/TechnicalBackButton";

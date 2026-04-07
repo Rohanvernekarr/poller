@@ -1,4 +1,4 @@
-import { getPollResults } from "../../../actions";
+import { getPollResults } from "../../../utils/actions";
 import { notFound, redirect } from "next/navigation";
 import ResultsUI from "./ResultsUI";
 

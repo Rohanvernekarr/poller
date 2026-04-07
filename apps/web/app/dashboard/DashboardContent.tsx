@@ -6,7 +6,7 @@ import { Button } from "@repo/ui/button";
 import { Input } from "@repo/ui/input";
 import { BarChart3, CheckCircle2, Plus, Search, LayoutGrid, List, SlidersHorizontal, X } from "lucide-react";
 import Link from "next/link";
-import { deletePoll } from "../actions";
+import { deletePoll } from "../utils/actions";
 import { DeletePollModal } from "../components/DeletePollModal";
 import { PollCard } from "./components/PollCard";
 import { VotedPollCard } from "./components/VotedPollCard";

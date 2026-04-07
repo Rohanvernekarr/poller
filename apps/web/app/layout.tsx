@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
-import { Navigation } from "./Navigation";
+import { Navigation } from "./components/Navigation";
 import { Footer } from "./components/Footer";
-import { Providers } from "./Providers";
+import { Providers } from "./utils/Providers";
 
 const outfit = Outfit({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"] });
 

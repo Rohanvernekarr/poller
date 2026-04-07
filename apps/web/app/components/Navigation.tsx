@@ -5,8 +5,8 @@ import { LogOut, Menu, Plus, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
-import { MobileMenu } from "./components/MobileMenu";
-import { SignOutModal } from "./components/SignOutModal";
+import { MobileMenu } from "./MobileMenu";
+import { SignOutModal } from "./SignOutModal";
 
 export function Navigation() {
   const pathname = usePathname();
