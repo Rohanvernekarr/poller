@@ -3,7 +3,7 @@
 import { SessionProvider, useSession } from "next-auth/react";
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 
 if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_POSTHOG_KEY) {
@@ -55,7 +55,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <SessionProvider>
       <PostHogProvider client={posthog}>
         <PostHogAuthWrapper>
-          <PostHogRouteTracker />
+          <Suspense>
+            <PostHogRouteTracker />
+          </Suspense>
           {children}
         </PostHogAuthWrapper>
       </PostHogProvider>
