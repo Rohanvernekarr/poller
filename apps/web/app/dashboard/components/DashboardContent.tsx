@@ -6,10 +6,10 @@ import { Button } from "@repo/ui/button";
 import { Input } from "@repo/ui/input";
 import { BarChart3, CheckCircle2, Plus, Search, LayoutGrid, List, SlidersHorizontal, X } from "lucide-react";
 import Link from "next/link";
-import { deletePoll } from "../utils/actions";
-import { DeletePollModal } from "../components/DeletePollModal";
-import { PollCard } from "./components/PollCard";
-import { VotedPollCard } from "./components/VotedPollCard";
+import { deletePoll } from "../../utils/actions";
+import { DeletePollModal } from "../../components/DeletePollModal";
+import { PollCard } from "./PollCard";
+import { VotedPollCard } from "./VotedPollCard";
 
 type SortOption = "newest" | "oldest" | "most_votes" | "least_votes";
 

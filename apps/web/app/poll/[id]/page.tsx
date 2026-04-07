@@ -1,6 +1,6 @@
 import { prisma } from "@repo/db";
 import { notFound } from "next/navigation";
-import { PollUI } from "./PollUI";
+import { PollUI } from "./components/PollUI";
 import { cookies } from "next/headers";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../api/auth/[...nextauth]/route";

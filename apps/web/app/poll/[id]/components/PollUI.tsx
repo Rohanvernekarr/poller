@@ -6,18 +6,18 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@repo/ui/card";
 import { Button } from "@repo/ui/button";
 import useSWR from "swr";
-import { updatePollSettings, deletePoll, closePoll, reopenPoll } from "../../utils/actions";
+import { updatePollSettings, deletePoll, closePoll, reopenPoll } from "../../../utils/actions";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { CheckCircle2, Lock, Clock } from "lucide-react";
 import { CommentsSection } from "./CommentsSection";
-import { PollVoting } from "./components/PollVoting";
-import { PollResults } from "./components/PollResults";
-import { PollSidebar } from "./components/PollSidebar";
-import { PollSettingsModal } from "./components/PollSettingsModal";
-import { TechnicalBackButton } from "../../components/TechnicalBackButton";
-import { DeletePollModal } from "../../components/DeletePollModal";
+import { PollVoting } from "./PollVoting";
+import { PollResults } from "./PollResults";
+import { PollSidebar } from "./PollSidebar";
+import { PollSettingsModal } from "./PollSettingsModal";
+import { TechnicalBackButton } from "../../../components/TechnicalBackButton";
+import { DeletePollModal } from "../../../components/DeletePollModal";
 
 interface PollOption { id: string; pollId: string; text: string; voteCount: number; }
 interface Poll {

@@ -7,7 +7,7 @@ import {
   BarChart3, Users, Calendar, TrendingUp, Trophy, Clock, Download,
   ShieldCheck, MoreHorizontal 
 } from "lucide-react";
-import { PollResults } from "../components/PollResults";
+import { PollResults } from "./PollResults";
 import { TechnicalBackButton } from "../../../components/TechnicalBackButton";
 
 interface ResultsUIProps { poll: any; }
