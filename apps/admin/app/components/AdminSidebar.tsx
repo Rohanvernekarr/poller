@@ -55,7 +55,7 @@ export function AdminSidebar() {
 
       <div className="p-4 mt-auto space-y-2 border-t border-white/5">
         <Link 
-          href="http://localhost:3000" 
+          href="https://poller-web.vercel.app" 
           target="_blank"
           className="flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-white hover:bg-white/5 rounded-xl transition-all font-bold text-sm"
         >
