@@ -18,9 +18,9 @@ export function Footer() {
             The simplest polling platform.
           </p>
           <div className="flex gap-4">
-            <SocialLink icon={<Globe className="w-4 h-4" />} />
-            <SocialLink icon={<Mail className="w-4 h-4" />} />
-            <SocialLink icon={<MessageSquare className="w-4 h-4" />} />
+            <SocialLink href="https://github.com/rohanvernekarr" icon={<Globe className="w-4 h-4" />} />
+            <SocialLink href="https://www.linkedin.com/in/rohan-vernekar-b57913283/" icon={<Mail className="w-4 h-4" />} />
+            <SocialLink href="https://x.com/Rohanvrnkr" icon={<MessageSquare className="w-4 h-4" />} />
           </div>
         </div>
         <div className="space-y-6">
@@ -61,10 +61,15 @@ function FooterLink({ text, href }: { text: string; href: string }) {
   );
 }
 
-function SocialLink({ icon }: { icon: React.ReactNode }) {
+function SocialLink({ icon, href }: { icon: React.ReactNode; href: string }) {
   return (
-    <div className="p-3 rounded-xl bg-foreground/5 border border-border text-foreground/40 hover:text-foreground hover:bg-foreground/10 transition-all cursor-pointer">
+    <Link
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="p-3 rounded-xl bg-foreground/5 border border-border text-foreground/40 hover:text-foreground hover:bg-foreground/10 transition-all"
+    >
       {icon}
-    </div>
+    </Link>
   );
 }
