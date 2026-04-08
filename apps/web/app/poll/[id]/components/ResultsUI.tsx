@@ -170,7 +170,7 @@ export default function ResultsUI({ poll }: ResultsUIProps) {
         </div>
       </div>
 
-      {/* ── Print Interface (Clean Report View) ───────────────────────────── */}
+      {/* Print Interface (Clean Report View)  */}
       <div className="hidden print:block bg-white text-black p-6 font-sans min-h-screen">
         <header className="border-b-4 border-black pb-4 mb-8">
           <div className="flex justify-between items-start mb-6">

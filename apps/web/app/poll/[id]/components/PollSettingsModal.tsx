@@ -63,7 +63,6 @@ export function PollSettingsModal({ isOpen, onClose, pollId, isExpired, settings
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="relative w-full max-w-xl bg-background border border-border shadow-2xl rounded-[2rem] overflow-hidden"
           >
-            {/* Header */}
             <div className="flex items-center justify-between px-7 py-5 border-b border-border">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-2xl bg-foreground/10 flex items-center justify-center">
@@ -82,7 +81,6 @@ export function PollSettingsModal({ isOpen, onClose, pollId, isExpired, settings
             {/* Scrollable body */}
             <div className="p-7 space-y-1 max-h-[70vh] overflow-y-auto">
 
-              {/* ── Voting Behavior ── */}
               <SectionLabel>Voting Behavior</SectionLabel>
 
               <SettingToggle
@@ -104,7 +102,7 @@ export function PollSettingsModal({ isOpen, onClose, pollId, isExpired, settings
                 note={settings.requireAuth ? "Disabled when Sign In Required is on" : undefined}
               />
 
-              {/* ── Access Control ── */}
+              {/* Access Control  */}
               <SectionLabel className="pt-6">Access Control</SectionLabel>
 
               <SettingToggle
@@ -148,7 +146,7 @@ export function PollSettingsModal({ isOpen, onClose, pollId, isExpired, settings
                 </div>
               </div>
 
-              {/* ── Visibility & Sharing ── */}
+              {/* Visibility  */}
               <SectionLabel className="pt-6">Visibility & Sharing</SectionLabel>
 
               <div className="flex items-start gap-4 py-4">
@@ -183,7 +181,7 @@ export function PollSettingsModal({ isOpen, onClose, pollId, isExpired, settings
                 disabled={isUpdating}
               />
 
-              {/* ── Privacy & Engagement ── */}
+              {/* Privacy & Engagement */}
               <SectionLabel className="pt-6">Privacy & Engagement</SectionLabel>
 
               <SettingToggle
