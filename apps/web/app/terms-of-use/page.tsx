@@ -348,7 +348,7 @@ export default function TermsPage() {
 
           <div className="flex flex-wrap gap-4 pt-4 border-t border-border">
             <Link
-              href="/privacy"
+              href="/privacy-policy"
               className="text-xs font-black uppercase tracking-widest italic text-foreground/40 hover:text-foreground transition-colors"
             >
               Privacy Policy →

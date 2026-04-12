@@ -275,7 +275,7 @@ export default function PrivacyPage() {
 
           <div className="flex flex-wrap gap-4 pt-4 border-t border-border">
             <Link
-              href="/terms"
+              href="/terms-of-use"
               className="text-xs font-black uppercase tracking-widest italic text-foreground/40 hover:text-foreground transition-colors"
             >
               Terms of Service →
